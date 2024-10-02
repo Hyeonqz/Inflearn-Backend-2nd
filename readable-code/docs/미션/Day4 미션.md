@@ -115,3 +115,33 @@ private static boolean hasNoCustomerInfo(Order order) {
 위 과정들을 통하여 가독성 향상 및 유지보수 하기 쉽게 리팩토링을 해보았습니다
 
 ### 2. SOLID에 대하여 자기만의 언어로 정리해 봅시다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
