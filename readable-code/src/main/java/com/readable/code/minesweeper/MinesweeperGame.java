@@ -9,13 +9,8 @@ public class MinesweeperGame {
 	public static final Scanner SCANNER = new Scanner(System.in);
 	private static final int BOARD_ROW_SIZE = 8;
 	private static final int BOARD_COLUMN_SIZE = 10;
-	private static final String FLAG_SIGN = "⚑";
-	private static final String LAND_MINE_SIGN = "*";
-	private static final String CLOSED_CELL_SIGN = "□";
-	private static final String OPENED_CELL_SIGN = "◼️";
-	private static final String[][] BOARD = new String[BOARD_ROW_SIZE][BOARD_COLUMN_SIZE];
-	private static final Integer[][] LAND_MINE_COUNTS = new Integer[BOARD_ROW_SIZE][BOARD_COLUMN_SIZE];
-	private static final boolean[][] LAND_MINES = new boolean[BOARD_ROW_SIZE][BOARD_COLUMN_SIZE];
+	private static final Cell[][] BOARD = new Cell[BOARD_ROW_SIZE][BOARD_COLUMN_SIZE];
+	private static final Integer[][] NEARBY_LAND_MINE_COUNTS = new Integer[BOARD_ROW_SIZE][BOARD_COLUMN_SIZE];
 
 	private static int gameStatus = 0; // 0:게임중, 1:승리, -1:패배
 
@@ -55,14 +50,14 @@ public class MinesweeperGame {
 		int selectedRowIndex = getSelectedRowIndex(cellInput);
 
 		if (doesUserChooseToPlantFlag(userActionInput)) {
-			BOARD[selectedRowIndex][selectedColIndex] = FLAG_SIGN;
+			BOARD[selectedRowIndex][selectedColIndex].flag();
 			checkIfGameIsOver();
 			return;
 		}
 
 		if (doesUserChooseToOpenCell(userActionInput)) {
 			if (landMineCell(selectedRowIndex, selectedColIndex)) {
-				BOARD[selectedRowIndex][selectedColIndex] = LAND_MINE_SIGN;
+				BOARD[selectedRowIndex][selectedColIndex].open();
 				changeGameStatusToLose();
 				return;
 			}
@@ -78,7 +73,7 @@ public class MinesweeperGame {
 	}
 
 	private static boolean landMineCell (int selectedRowIndex, int selectedColIndex) {
-		return LAND_MINES[selectedRowIndex][selectedColIndex];
+		return BOARD[selectedRowIndex][selectedColIndex].isLandMine();
 	}
 
 	private static boolean doesUserChooseToOpenCell (String userActionInput) {
@@ -118,8 +113,8 @@ public class MinesweeperGame {
 	}
 
 	private static void checkIfGameIsOver() {
-		boolean isAllOpened = isAllCellOpened();
-		if (isAllOpened) {
+		boolean isAllChecked = isAllCellChecked();
+		if (isAllChecked) {
 			changeGameStatusToWin();
 		}
 	}
@@ -128,22 +123,10 @@ public class MinesweeperGame {
 		gameStatus = 1;
 	}
 
-	private static boolean isAllCellOpened2() {
+	private static boolean isAllCellChecked() {
 		return Arrays.stream(BOARD)
 			.flatMap(Arrays::stream)
-			.noneMatch(cell -> cell.equals(CLOSED_CELL_SIGN));
-	}
-
-	private static boolean isAllCellOpened() {
-		boolean isAllOpened = true;
-		for (int row = 0; row < BOARD_ROW_SIZE; row++) {
-			for (int col = 0; col < BOARD_COLUMN_SIZE; col++) {
-				if (BOARD[row][col].equals(CLOSED_CELL_SIGN)) {
-					isAllOpened = false;
-				}
-			}
-		}
-		return isAllOpened;
+			.allMatch(Cell::isChecked);
 	}
 
 	private static int convertRowFrom(char cellInputRow) {
@@ -185,7 +168,7 @@ public class MinesweeperGame {
 		for (int row = 0; row < 8; row++) {
 			System.out.printf("%d  ", row + 1);
 			for (int col = 0; col < 10; col++) {
-				System.out.print(BOARD[row][col] + " ");
+				System.out.print(BOARD[row][col].getSign() + " ");
 			}
 			System.out.println();
 		}
@@ -195,16 +178,18 @@ public class MinesweeperGame {
 	private static void initializeGame() {
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 10; col++) {
-				BOARD[row][col] = "□";
+				BOARD[row][col] = Cell.create();
 			}
 		}
+
 		for (int i = 0; i < 10; i++) {
 			int col = new Random().nextInt(10);
 			int row = new Random().nextInt(8);
-			LAND_MINES[row][col] = true;
+			BOARD[row][col].turnOnLandMine();
 		}
-		for (int row = 0; row < 8; row++) {
-			for (int col = 0; col < 10; col++) {
+
+		for (int row = 0; row < BOARD_ROW_SIZE; row++) {
+			for (int col = 0; col < BOARD_COLUMN_SIZE; col++) {
 				int count = 0;
 				if (!landMineCell(row, col)) {
 					if (row - 1 >= 0 && col - 1 >= 0 && landMineCell(row - 1, col - 1)) {
@@ -231,10 +216,9 @@ public class MinesweeperGame {
 					if (row + 1 < 8 && col + 1 < 10 && landMineCell(row + 1, col + 1)) {
 						count++;
 					}
-					LAND_MINE_COUNTS[row][col] = count;
-					continue;
+					NEARBY_LAND_MINE_COUNTS[row][col] = count;
 				}
-				LAND_MINE_COUNTS[row][col] = 0;
+				BOARD[row][col].updateNearbyLandMineCount(count);
 			}
 		}
 	}
@@ -246,21 +230,22 @@ public class MinesweeperGame {
 	}
 
 	private static void open(int row, int col) {
-		if (row < 0 || row >= 8 || col < 0 || col >= 10) {
+		if (row < 0 || row >= BOARD_ROW_SIZE || col < 0 || col >= BOARD_COLUMN_SIZE) {
 			return;
 		}
-		if (!BOARD[row][col].equals("□")) {
+		if (BOARD[row][col].isOpened()) {
 			return;
 		}
 		if (landMineCell(row, col)) {
 			return;
 		}
-		if (LAND_MINE_COUNTS[row][col] != 0) {
-			BOARD[row][col] = String.valueOf(LAND_MINE_COUNTS[row][col]);
+
+		BOARD[row][col].open();
+
+		if (BOARD[row][col].hasLandMineCount())  {
 			return;
-		} else {
-			BOARD[row][col] = "■";
 		}
+
 		open(row - 1, col - 1);
 		open(row - 1, col);
 		open(row - 1, col + 1);
