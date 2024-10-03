@@ -1,5 +1,8 @@
 package com.readable.code.minesweeper.io;
 
+import java.util.List;
+import java.util.stream.IntStream;
+
 import com.readable.code.minesweeper.GameBoard;
 import com.readable.code.minesweeper.GameException;
 
@@ -11,15 +14,27 @@ public class ConsoleOutputHandler {
 	}
 
 	public void showBoard(GameBoard board) {
-		System.out.println("   a b c d e f g h i j");
+		String alphabets = generateColAlphabets(board);
+		System.out.println("    " + alphabets);
+
 		for (int row = 0; row < board.getRowSize(); row++) {
-			System.out.printf("%d  ", row + 1);
+			System.out.printf("%2d  ", row + 1);
 			for (int col = 0; col < board.getColSize(); col++) {
 				System.out.print(board.getSign(row,col) + " ");
 			}
 			System.out.println();
 		}
+
 		System.out.println();
+	}
+
+	private String generateColAlphabets (GameBoard board) {
+		List<String> list = IntStream.range(0, board.getColSize())
+			.mapToObj(idx -> (char)('a' + idx))
+			.map(Object::toString)
+			.toList();
+
+		return String.join(" ", list);
 	}
 
 	public void printGameWinningComment () {
