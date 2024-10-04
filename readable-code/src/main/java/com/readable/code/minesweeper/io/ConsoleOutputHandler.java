@@ -6,13 +6,15 @@ import java.util.stream.IntStream;
 import com.readable.code.minesweeper.GameBoard;
 import com.readable.code.minesweeper.GameException;
 
-public class ConsoleOutputHandler {
+public class ConsoleOutputHandler implements OutputHandler{
+	@Override
 	public void showGameStartComments() {
 		System.out.println("-----------------------------------");
 		System.out.println("지뢰찾기 게임 시작!");
 		System.out.println("-----------------------------------");
 	}
 
+	@Override
 	public void showBoard(GameBoard board) {
 		String alphabets = generateColAlphabets(board);
 		System.out.println("    " + alphabets);
@@ -37,27 +39,33 @@ public class ConsoleOutputHandler {
 		return String.join(" ", list);
 	}
 
-	public void printGameWinningComment () {
+	@Override
+	public void showGameWinningComment () {
 		System.out.println("지뢰를 모두 찾았습니다. GAME CLEAR!");
 	}
 
-	public void printGameLoseComment() {
+	@Override
+	public void showGameLoseComment() {
 		System.out.println("지뢰를 밟았습니다. GAME OVER!");
 	}
 
-	public void printCommentForSelectingCell () {
+	@Override
+	public void showCommentForSelectingCell () {
 		System.out.println("선택할 좌표를 입력하세요. (예: a1)");
 	}
 
-	public void printCommentForUserAction () {
+	@Override
+	public void showCommentForUserAction () {
 		System.out.println("선택한 셀에 대한 행위를 선택하세요. (1: 오픈, 2: 깃발 꽂기)");
 	}
 
-	public void printExceptionMessage (GameException e) {
+	@Override
+	public void showExceptionMessage (GameException e) {
 		System.out.println(e.getMessage());
 	}
 
-	public void printSimpleMessage () {
+	@Override
+	public void showSimpleMessage () {
 		System.out.println("프로그램에 문제가 생겼다");
 	}
 
