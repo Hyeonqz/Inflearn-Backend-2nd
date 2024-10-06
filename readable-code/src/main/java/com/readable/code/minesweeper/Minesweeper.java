@@ -1,6 +1,5 @@
 package com.readable.code.minesweeper;
 
-import com.readable.code.minesweeper.game.GameInitializable;
 import com.readable.code.minesweeper.game.GameRunnable;
 import com.readable.code.minesweeper.gameLevel.GameLevel;
 import com.readable.code.minesweeper.io.ConsoleInputHandler;
@@ -9,7 +8,7 @@ import com.readable.code.minesweeper.io.InputHandler;
 import com.readable.code.minesweeper.io.OutputHandler;
 import com.readable.code.minesweeper.position.CellPosition;
 
-public class Minesweeper implements GameInitializable, GameRunnable {
+public class Minesweeper implements GameRunnable {
 
 	private final GameBoard gameBoard;
 	private final BoardIndexConverter boardIndexConverter = new BoardIndexConverter();
@@ -21,11 +20,6 @@ public class Minesweeper implements GameInitializable, GameRunnable {
 		gameBoard = new GameBoard(gameLevel);
 		this.inputHandler = inputHandler;
 		this.outputHandler = outputHandler;
-	}
-
-	@Override
-	public void initialize () {
-		gameBoard.initializeGame();
 	}
 
 	@Override

@@ -136,10 +136,66 @@ public class RelativePosition {
 - 동등성 보장을 위한 equals & hashCode 를 만들어 준다.
 
 ## 일급 컬렉션
+- 다른 요소에게 사용 가능한 모든 연산을 지원하는 요소
+  - 변수로 할당 될 수 있다.
+  - 파라미터로 전달될 수 있다
+  - 함수의 결과로 반환될 수 있다.
+    - ex) 일급 함수
+      - 함수형 프로그래밍 언어에서, 함수는 일급 시민이다
+      - 함수는 변수에 할당될 수 있고, 인자로 전달될 수 있고, 함수의 결과로 함수가 반환될 수도 있다.
+
+- 컬렉션을 포장하면서, 컬렉션 만을 유일하게 필드로 가지는 객체
+  - 컬렉션을 다른 객체와 동둥한 레벨로 다루기 위함
+  - 단 하나의 컬렉션 필드만을 가진다.
+- 컬렉션을 추상화하며 의미를 담을 수 있고, 가공 로직의 보금자리가 생긴다.
+  - 가공 로직에 대한 테스트도 작성할 수 있다.
+- 만약 getter 로 컬렉션을 반환할 일이 생긴다면
+  - 외부 조작을 피하기 위해 꼭 새로운 컬렉션으로 만들어서 반환해주자.
+
+```java
+public class Cells {
+	// 1급 컬렉션 -> 필드가 1개다
+	
+	private final List<Cell> cells;
+
+	public Cells (List<Cell> cells) {
+		this.cells = cells;
+	}
+	
+	public static Cells of(List<Cell> cells) {
+		return new Cells(cells);
+	}
+	
+	public static Cells from(Cell[][] cells) {
+		List<Cell> list = Arrays.stream(cells)
+			.flatMap(Arrays::stream)
+			.toList();
+		return Cells.of(list);
+	}
+	
+	public boolean isAllChecked() {
+		return cells.stream()
+			.allMatch(Cell::isChecked);
+	}
+
+}
+```
+
+위 처럼 적용을 할 수 있다. 아직은 이해하기 어려운 내용이였지만, 위 내용을 다듬어서 잘 사용할 수 있다면 강력한 무기가 될 것이라고 생각한다.
 
 <br>
 
 ## Enum 의 특성과 활용
+
+
+
+
+
+
+
+
+
+
 
 
 <br>
