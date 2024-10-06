@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.readable.code.minesweeper.cell.Cell;
+import com.readable.code.minesweeper.cell.CellSnapshot;
 import com.readable.code.minesweeper.cell.CellState;
 import com.readable.code.minesweeper.cell.Cells;
 import com.readable.code.minesweeper.cell.EmptySell;
@@ -94,8 +95,14 @@ public class GameBoard {
 		List<CellPosition> landMinePositions = cellPositions.extractRandomPositions(landMineCount);
 		initializeLandMineCells(landMinePositions);
 
-		List<CellPosition> numberPositionsCandidates =x cellPositions.subtract(landMinePositions);
+		List<CellPosition> numberPositionsCandidates = cellPositions.subtract(landMinePositions);
 		initializeNumberCells(numberPositionsCandidates);
+	}
+
+	public CellSnapshot getSnapshot (CellPosition cellPosition) {
+		Cell cell = findCell(cellPosition);
+		return cell.getSnapshot();
+
 	}
 
 	private void initializeEmptyCells (CellPositions cellPositions) {
@@ -129,11 +136,6 @@ public class GameBoard {
 
 	private void updateCellAt (CellPosition position, Cell cell) {
 		board[position.getRowIndex()][position.getColIndex()] = cell;
-	}
-
-	public String getSign(CellPosition cellPosition) {
-		Cell cell = findCell(cellPosition);
-		return cell.getSign();
 	}
 
 	public int getRowSize() {

@@ -1,7 +1,6 @@
 package com.readable.code.minesweeper.cell;
 
 public class LandMineCell implements Cell {
-	private static final String LAND_MINE_SIGN = "*";
 	private final CellState cellState = CellState.initialize();
 
 	private boolean isLaneMine;
@@ -17,14 +16,14 @@ public class LandMineCell implements Cell {
 	}
 
 	@Override
-	public String getSign () {
-		if(cellState.isOpened()) {
-			return LAND_MINE_SIGN;
-		}
-		if(cellState.isFlagged()) {
-			return FLAG_SIGN;
-		}
-		return UNCHECKED_SIGN;
+	public CellSnapshot getSnapshot () {
+		if(cellState.isOpened())
+			return CellSnapshot.ofLandmine();
+
+		if(cellState.isFlagged())
+			return CellSnapshot.ofFlag();
+
+		return CellSnapshot.ofUnchecked();
 	}
 
 	@Override

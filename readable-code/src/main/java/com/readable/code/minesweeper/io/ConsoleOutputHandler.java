@@ -5,9 +5,16 @@ import java.util.stream.IntStream;
 
 import com.readable.code.minesweeper.GameBoard;
 import com.readable.code.minesweeper.GameException;
+import com.readable.code.minesweeper.cell.CellSnapshot;
+import com.readable.code.minesweeper.cell.CellSnapshotStatus;
 import com.readable.code.minesweeper.position.CellPosition;
 
 public class ConsoleOutputHandler implements OutputHandler{
+	protected static final String EMPTY_SIGN = "◼";
+	private static final String LAND_MINE_SIGN = "*";
+	private static final String FLAG_SIGN = "⚑";
+	private static final String UNCHECKED_SIGN = "□";
+
 	@Override
 	public void showGameStartComments() {
 		System.out.println("-----------------------------------");
@@ -24,12 +31,31 @@ public class ConsoleOutputHandler implements OutputHandler{
 			System.out.printf("%2d  ", row + 1);
 			for (int col = 0; col < board.getColSize(); col++) {
 				CellPosition cellPosition = CellPosition.of(row, col);
-				System.out.print(board.getSign(cellPosition) + " ");
+
+				CellSnapshot cellSnapshot = board.getSnapshot(cellPosition);
+				String cellSign = decideCellSignFrom(cellSnapshot);
+
+				System.out.print(cellSign + " ");
 			}
 			System.out.println();
 		}
-
 		System.out.println();
+	}
+
+	private String decideCellSignFrom (CellSnapshot cellSnapshot) {
+		CellSnapshotStatus status = cellSnapshot.getStatus();
+		if(status == CellSnapshotStatus.EMPTY)
+			return EMPTY_SIGN;
+		if(status == CellSnapshotStatus.FLAG)
+			return FLAG_SIGN;
+		if(status == CellSnapshotStatus.LAND_MINE)
+			return LAND_MINE_SIGN;
+		if(status == CellSnapshotStatus.NUMBER)
+			return String.valueOf(cellSnapshot.getNearbyLandMineCount());
+		if(status == CellSnapshotStatus.UNCHECKED)
+			return UNCHECKED_SIGN;
+
+		throw new IllegalArgumentException("확인할 수 없는 셀 입니다");
 	}
 
 	private String generateColAlphabets (GameBoard board) {

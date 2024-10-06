@@ -1,8 +1,9 @@
 package com.readable.code.minesweeper.io;
 
 import com.readable.code.minesweeper.position.CellPosition;
+import com.readable.code.minesweeper.user.UserAction;
 
 public interface InputHandler {
-	String getUserInput();
+	UserAction getUserActionFromUser();
 	CellPosition getCellPositionFromUser();
 }

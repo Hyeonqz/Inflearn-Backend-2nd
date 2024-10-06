@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.readable.code.minesweeper.BoardIndexConverter;
 import com.readable.code.minesweeper.position.CellPosition;
+import com.readable.code.minesweeper.user.UserAction;
 
 public class ConsoleInputHandler implements InputHandler{
 
@@ -14,9 +15,17 @@ public class ConsoleInputHandler implements InputHandler{
 	private final BoardIndexConverter boardIndexConverter = new BoardIndexConverter();
 
 	@Override
-	public String getUserInput () {
+	public UserAction getUserActionFromUser () {
 		try {
-			return br.readLine();
+			String userInput = br.readLine();
+
+			if("1".equals(userInput)) {
+				return UserAction.OPEN;
+			}
+			if("2".equals(userInput)) {
+				return UserAction.FLAG;
+			}
+			return UserAction.UNKNOWN;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
