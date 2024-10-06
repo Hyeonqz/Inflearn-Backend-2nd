@@ -5,6 +5,7 @@ import java.util.stream.IntStream;
 
 import com.readable.code.minesweeper.GameBoard;
 import com.readable.code.minesweeper.GameException;
+import com.readable.code.minesweeper.position.CellPosition;
 
 public class ConsoleOutputHandler implements OutputHandler{
 	@Override
@@ -22,7 +23,8 @@ public class ConsoleOutputHandler implements OutputHandler{
 		for (int row = 0; row < board.getRowSize(); row++) {
 			System.out.printf("%2d  ", row + 1);
 			for (int col = 0; col < board.getColSize(); col++) {
-				System.out.print(board.getSign(row,col) + " ");
+				CellPosition cellPosition = CellPosition.of(row, col);
+				System.out.print(board.getSign(cellPosition) + " ");
 			}
 			System.out.println();
 		}

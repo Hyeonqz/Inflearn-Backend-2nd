@@ -53,10 +53,11 @@ public class CellPosition {
 	public CellPosition calculatePositionBy (RelativePosition relativePosition) {
 		if(this.canCalculatePositionBy(relativePosition)) {
 			return CellPosition.of(
-				this.rowIndex + relativePosition.getDeltaRow(), this.colIndex + relativePosition.getDeltaCol()
+				this.rowIndex + relativePosition.getDeltaRow(),
+				this.colIndex + relativePosition.getDeltaCol()
 			);
 		}
-		throw new IllegalArgumentException("잘못된 좌표 입니다.");
+		throw new IllegalArgumentException("움직일 수 있는 좌표가 아닙니다.");
 	}
 
 	public boolean canCalculatePositionBy (RelativePosition relativePosition) {
@@ -67,5 +68,10 @@ public class CellPosition {
 	public boolean isRowIndexLessThan (int rowSize) {
 		return this.rowIndex < rowSize;
 	}
+
+	public boolean isColIndexLessThan(int colIndex) {
+		return this.colIndex < colIndex;
+	}
+
 
 }

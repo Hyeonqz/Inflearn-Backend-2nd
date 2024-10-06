@@ -135,6 +135,16 @@ public class RelativePosition {
 
 - 동등성 보장을 위한 equals & hashCode 를 만들어 준다.
 
+## 일급 컬렉션
+
+<br>
+
+## Enum 의 특성과 활용
+
+
+<br>
+
+## 다형성 활용하기
 
 
 
