@@ -11,32 +11,35 @@ public class CellSnapshot {
 		this.nearbyLandMineCount = nearbyLandMineCount;
 	}
 
-	// 정적 팩토리 메소드
 	public static CellSnapshot of(CellSnapshotStatus cellSnapshotStatus, int nearbyLandMineCount) {
 		return new CellSnapshot(cellSnapshotStatus, nearbyLandMineCount);
 	}
 
 	public static CellSnapshot ofEmpty() {
-		return of(CellSnapshotStatus.EMPTY, 0);
+		return of(com.readable.code.minesweeper.cell.CellSnapshotStatus.EMPTY, 0);
 	}
 
 	public static CellSnapshot ofFlag() {
-		return of(CellSnapshotStatus.FLAG,0);
+		return of(com.readable.code.minesweeper.cell.CellSnapshotStatus.FLAG,0);
 	}
 
 	public static CellSnapshot ofLandmine() {
-		return of(CellSnapshotStatus.LAND_MINE,0);
+		return of(com.readable.code.minesweeper.cell.CellSnapshotStatus.LAND_MINE,0);
 	}
 
 	public static CellSnapshot ofNumber(int nearbyLandMineCount) {
-		return of(CellSnapshotStatus.NUMBER,nearbyLandMineCount);
+		return of(com.readable.code.minesweeper.cell.CellSnapshotStatus.NUMBER,nearbyLandMineCount);
 	}
 	public static CellSnapshot ofUnchecked() {
-		return of(CellSnapshotStatus.UNCHECKED,0);
+		return of(com.readable.code.minesweeper.cell.CellSnapshotStatus.UNCHECKED,0);
 	}
 
 	public CellSnapshotStatus getStatus () {
 		return status;
+	}
+
+	public boolean isSameStatus (CellSnapshotStatus cellSnapshotStatus) {
+		return this.status == cellSnapshotStatus;
 	}
 
 	public int getNearbyLandMineCount () {

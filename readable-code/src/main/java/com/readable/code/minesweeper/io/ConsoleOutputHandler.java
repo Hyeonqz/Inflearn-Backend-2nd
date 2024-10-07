@@ -3,17 +3,13 @@ package com.readable.code.minesweeper.io;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import com.readable.code.minesweeper.GameBoard;
-import com.readable.code.minesweeper.GameException;
+import com.readable.code.minesweeper.game.GameBoard;
+import com.readable.code.minesweeper.exception.GameException;
 import com.readable.code.minesweeper.cell.CellSnapshot;
-import com.readable.code.minesweeper.cell.CellSnapshotStatus;
+import com.readable.code.minesweeper.io.sign.enums.CellSignProvider;
 import com.readable.code.minesweeper.position.CellPosition;
 
 public class ConsoleOutputHandler implements OutputHandler{
-	protected static final String EMPTY_SIGN = "◼";
-	private static final String LAND_MINE_SIGN = "*";
-	private static final String FLAG_SIGN = "⚑";
-	private static final String UNCHECKED_SIGN = "□";
 
 	@Override
 	public void showGameStartComments() {
@@ -33,29 +29,14 @@ public class ConsoleOutputHandler implements OutputHandler{
 				CellPosition cellPosition = CellPosition.of(row, col);
 
 				CellSnapshot cellSnapshot = board.getSnapshot(cellPosition);
-				String cellSign = decideCellSignFrom(cellSnapshot);
+				//String cellSign = cellSignFinder.findCellSignFrom(cellSnapshot);
+				String cellSign = CellSignProvider.findCellSignFrom(cellSnapshot);
 
 				System.out.print(cellSign + " ");
 			}
 			System.out.println();
 		}
 		System.out.println();
-	}
-
-	private String decideCellSignFrom (CellSnapshot cellSnapshot) {
-		CellSnapshotStatus status = cellSnapshot.getStatus();
-		if(status == CellSnapshotStatus.EMPTY)
-			return EMPTY_SIGN;
-		if(status == CellSnapshotStatus.FLAG)
-			return FLAG_SIGN;
-		if(status == CellSnapshotStatus.LAND_MINE)
-			return LAND_MINE_SIGN;
-		if(status == CellSnapshotStatus.NUMBER)
-			return String.valueOf(cellSnapshot.getNearbyLandMineCount());
-		if(status == CellSnapshotStatus.UNCHECKED)
-			return UNCHECKED_SIGN;
-
-		throw new IllegalArgumentException("확인할 수 없는 셀 입니다");
 	}
 
 	private String generateColAlphabets (GameBoard board) {

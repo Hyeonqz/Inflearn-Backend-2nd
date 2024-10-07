@@ -1,10 +1,7 @@
 package com.readable.code.minesweeper.io;
 
-import java.util.List;
-import java.util.stream.IntStream;
-
-import com.readable.code.minesweeper.GameBoard;
-import com.readable.code.minesweeper.GameException;
+import com.readable.code.minesweeper.game.GameBoard;
+import com.readable.code.minesweeper.exception.GameException;
 
 public interface OutputHandler {
 	void showGameStartComments ();

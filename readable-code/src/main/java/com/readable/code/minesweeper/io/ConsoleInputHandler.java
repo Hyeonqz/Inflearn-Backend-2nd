@@ -3,9 +3,8 @@ package com.readable.code.minesweeper.io;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 
-import com.readable.code.minesweeper.BoardIndexConverter;
+import com.readable.code.minesweeper.game.BoardIndexConverter;
 import com.readable.code.minesweeper.position.CellPosition;
 import com.readable.code.minesweeper.user.UserAction;
 
@@ -35,10 +34,10 @@ public class ConsoleInputHandler implements InputHandler{
 	public CellPosition getCellPositionFromUser () {
 		try {
 			String userInput = br.readLine();
-			int selectedColIndex = boardIndexConverter.getSelectedColIndex(userInput);
-			int selectedRowIndex = boardIndexConverter.getSelectedRowIndex(userInput);
+			int colIndex = boardIndexConverter.getSelectedColIndex(userInput);
+			int rowIndex = boardIndexConverter.getSelectedRowIndex(userInput);
 
-			return new CellPosition.of(selectedRowIndex, selectedColIndex);
+			return CellPosition.of(rowIndex, colIndex);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

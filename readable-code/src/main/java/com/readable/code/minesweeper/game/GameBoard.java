@@ -1,12 +1,9 @@
-package com.readable.code.minesweeper;
+package com.readable.code.minesweeper.game;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import com.readable.code.minesweeper.cell.Cell;
 import com.readable.code.minesweeper.cell.CellSnapshot;
-import com.readable.code.minesweeper.cell.CellState;
 import com.readable.code.minesweeper.cell.Cells;
 import com.readable.code.minesweeper.cell.EmptySell;
 import com.readable.code.minesweeper.cell.LandMineCell;

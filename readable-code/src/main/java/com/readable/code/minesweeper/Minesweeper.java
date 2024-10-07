@@ -1,9 +1,10 @@
 package com.readable.code.minesweeper;
 
+import com.readable.code.minesweeper.exception.GameException;
+import com.readable.code.minesweeper.game.BoardIndexConverter;
+import com.readable.code.minesweeper.game.GameBoard;
 import com.readable.code.minesweeper.game.GameRunnable;
 import com.readable.code.minesweeper.gameLevel.GameLevel;
-import com.readable.code.minesweeper.io.ConsoleInputHandler;
-import com.readable.code.minesweeper.io.ConsoleOutputHandler;
 import com.readable.code.minesweeper.io.InputHandler;
 import com.readable.code.minesweeper.io.OutputHandler;
 import com.readable.code.minesweeper.position.CellPosition;

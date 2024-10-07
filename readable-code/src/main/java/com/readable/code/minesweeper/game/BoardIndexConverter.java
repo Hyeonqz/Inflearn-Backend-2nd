@@ -1,15 +1,17 @@
-package com.readable.code.minesweeper;
+package com.readable.code.minesweeper.game;
+
+import com.readable.code.minesweeper.exception.GameException;
 
 public class BoardIndexConverter {
 
 	private static final char BASE_CHAR_FOR_COL = 'a';
 
-	public int getSelectedColIndex (String cellInput, int colSize) {
+	public int getSelectedColIndex (String cellInput) {
 		char cellInputCol = cellInput.charAt(0);
 		return convertColFrom(cellInputCol);
 	}
 
-	public int getSelectedRowIndex (String cellInput, int rowSize) {
+	public int getSelectedRowIndex (String cellInput) {
 		String cellInputRow = cellInput.substring(1);
 		return convertRowFrom(cellInputRow);
 	}

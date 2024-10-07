@@ -195,24 +195,176 @@ public class Cells {
 Enum 은 코드에 박혀있는 값이기 때문에, 월화수목금, 봄여름가을겨울 처럼 절대 변하지 않는 값들을 저장하는게 좋다 <br>
 
 ```java
+public enum CellSnapshotStatus {
+	EMPTY("빈 셀"),
+	FLAG("깃발"),
+	LAND_MINE("지뢰"),
+	NUMBER("숫자"),
+	UNCHECKED("확인전")
+	;
+
+	private final String description;
+
+	CellSnapshotStatus (final String description) {
+		this.description = description;
+	}
+}
 
 ```
-
-
-
-
-
-
-
-
 
 <br>
 
 ## 다형성 활용하기
+반복적인 if 문을 제거해보자 <br>
 
+```java
+	private String decideCellSignFrom (CellSnapshot cellSnapshot) {
+		CellSnapshotStatus status = cellSnapshot.getStatus();
+		if(status == CellSnapshotStatus.EMPTY)
+			return EMPTY_SIGN;
+		if(status == CellSnapshotStatus.FLAG)
+			return FLAG_SIGN;
+		if(status == CellSnapshotStatus.LAND_MINE)
+			return LAND_MINE_SIGN;
+		if(status == CellSnapshotStatus.NUMBER)
+			return String.valueOf(cellSnapshot.getNearbyLandMineCount());
+		if(status == CellSnapshotStatus.UNCHECKED)
+			return UNCHECKED_SIGN;
 
+		throw new IllegalArgumentException("확인할 수 없는 셀 입니다");
+	}
+```
 
+위 코드의 여러개의 if 문이 보기가 싫다. 다형성을 사용해서 리팩토링을 해보자 <br>
 
+[추상부]
+```java
+// 메소드의 스펙을 가지고 있어야 한다.
+public interface CellSignProvidable {
+	String provide(CellSnapshot cellSnapshot);
+}
+```
 
+[구현체]
+```java
+public class FlagCellSignProvider implements CellSignProvidable{
+	private static final String FLAG_SIGN = "⚑";
 
+	@Override
+	public String provide (CellSnapshot cellSnapshot) {
+		return FLAG_SIGN;
+	}
 
+	@Override
+	public boolean supports (CellSnapshot cellSnapshot) {
+		return cellSnapshot.isSameStatus(CellSnapshotStatus.FLAG);
+	}
+
+}
+
+public class LandMineCellSignProvider implements CellSignProvidable{
+  private static final String LAND_MINE_SIGN = "*";
+
+  @Override
+  public String provide (CellSnapshot cellSnapshot) {
+    return LAND_MINE_SIGN;
+  }
+
+  @Override
+  public boolean supports (CellSnapshot cellSnapshot) {
+    return cellSnapshot.isSameStatus(CellSnapshotStatus.LAND_MINE);
+  }
+
+}
+```
+
+위와 같은 구현체 총 5개를 준비한다. 그리고 실제 메소드에서 사용은 아래와 같다
+```java
+	private String decideCellSignFrom (CellSnapshot cellSnapshot) {
+		CellSnapshotStatus status = cellSnapshot.getStatus();
+
+		List<CellSignProvidable> cellSignProvidables = List.of(
+			new EmptySellSignProvider(),
+			new FlagCellSignProvider(),
+			new LandMineCellSignProvider(),
+			new NumberCellSignProvider(),
+			new UncheckedCellSignProvider()
+		);
+
+		return cellSignProvidables.stream()
+			.filter(provider -> provider.supports(cellSnapshot))
+			.findFirst()
+			.map(provider -> provider.provide(cellSnapshot))
+			.orElseThrow(() -> new IllegalArgumentException("확인할 수 없는 셀 입니다"));
+	}
+```
+
+List 에 인터페이스 에 따른 클래스를 다 담고, 스트림을 돌려서 찾아내는 로직이다 <br>
+
+Enum 을 활용하여 아래와 같이 다형성을 구현할 수 도 있다 
+```java
+public enum CellSignProvider implements CellSignProvidable {
+	EMPTY(CellSnapshotStatus.EMPTY) {
+		@Override
+		public String provide (CellSnapshot cellSnapshot) {
+			return EMPTY_SIGN;
+		}
+	},
+	FLAG(CellSnapshotStatus.FLAG) {
+		@Override
+		public String provide (CellSnapshot cellSnapshot) {
+			return FLAG_SIGN;
+		}
+	},
+	LAND_MINE(CellSnapshotStatus.LAND_MINE) {
+		@Override
+		public String provide (CellSnapshot cellSnapshot) {
+			return LAND_MINE_SIGN;
+		}
+	},
+	NUMBER(CellSnapshotStatus.NUMBER) {
+		@Override
+		public String provide (CellSnapshot cellSnapshot) {
+			return String.valueOf(cellSnapshot.getNearbyLandMineCount());
+		}
+	},
+	UNCHECKED(CellSnapshotStatus.UNCHECKED) {
+		@Override
+		public String provide (CellSnapshot cellSnapshot) {
+			return UNCHECKED_SIGN;
+		}
+	}
+	;
+
+	private static final String EMPTY_SIGN = "◼";
+	private static final String FLAG_SIGN = "⚑";
+	private static final String LAND_MINE_SIGN = "*";
+	private static final String UNCHECKED_SIGN = "□";
+
+	private final CellSnapshotStatus status;
+
+	CellSignProvider (CellSnapshotStatus cellSnapshotStatus) {
+		this.status = cellSnapshotStatus;
+	}
+
+	@Override
+	public String provide (CellSnapshot cellSnapshot) {
+		return "";
+	}
+
+	@Override
+	public boolean supports (CellSnapshot cellSnapshot) {
+		return cellSnapshot.isSameStatus(status);
+	}
+
+	public static String findCellSignFrom(CellSnapshot cellSnapshot) {
+		return Arrays.stream(values())
+			.filter(provider -> provider.supports(cellSnapshot))
+			.findFirst()
+			.map(provider -> provider.provide(cellSnapshot))
+			.orElseThrow(() -> new IllegalArgumentException("확인할 수 없는 셀 입니다."));
+	}
+}
+```
+
+변하는 것과 변하지 않는 것을 분리하여 추상화하고, OCP 를 지키는 구조가 최고의 추상화 구조이다 
