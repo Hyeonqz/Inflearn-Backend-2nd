@@ -1,5 +1,6 @@
 package com.readable.code.minesweeper;
 
+import com.readable.code.minesweeper.config.GameConfig;
 import com.readable.code.minesweeper.gameLevel.Advanced;
 import com.readable.code.minesweeper.gameLevel.Beginner;
 import com.readable.code.minesweeper.gameLevel.GameLevel;
@@ -15,9 +16,15 @@ public class GameApplication {
 		InputHandler inputHandler = new ConsoleInputHandler();
 		OutputHandler outputHandler = new ConsoleOutputHandler();
 
-		Minesweeper mineSweeper = new Minesweeper(gameLevel, inputHandler, outputHandler);
+		GameConfig gameConfig = new GameConfig(
+			gameLevel, inputHandler, outputHandler
+		);
+
+		Minesweeper mineSweeper = new Minesweeper(gameConfig);
+		mineSweeper.initialize();
 		mineSweeper.run();
 	}
+
 	/*
 	* DIP (Dependency Inversion Principle)
 
