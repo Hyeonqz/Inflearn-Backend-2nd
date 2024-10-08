@@ -12,7 +12,7 @@ import com.readable.code.studycafe.tobe.model.pass.StudyCafeSeatPass;
 import com.readable.code.studycafe.tobe.model.pass.StudyCafePassType;
 import com.readable.code.studycafe.tobe.model.pass.StudyCafeSeatPasses;
 
-public class StudyCafeFileHandler {
+public class StudyCafeFileHandler{
 
     public StudyCafeSeatPasses readStudyCafePasses() {
         try {
