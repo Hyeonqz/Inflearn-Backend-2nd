@@ -4,7 +4,6 @@ import com.readable.code.minesweeper.config.GameConfig;
 import com.readable.code.minesweeper.exception.GameException;
 import com.readable.code.minesweeper.game.BoardIndexConverter;
 import com.readable.code.minesweeper.game.GameBoard;
-import com.readable.code.minesweeper.game.GameInitializable;
 import com.readable.code.minesweeper.game.GameRunnable;
 import com.readable.code.minesweeper.gameLevel.GameLevel;
 import com.readable.code.minesweeper.io.InputHandler;
@@ -12,7 +11,7 @@ import com.readable.code.minesweeper.io.OutputHandler;
 import com.readable.code.minesweeper.position.CellPosition;
 import com.readable.code.minesweeper.user.UserAction;
 
-public class Minesweeper implements GameRunnable, GameInitializable {
+public class Minesweeper implements GameRunnable {
 
 	private final GameBoard gameBoard;
 	private final BoardIndexConverter boardIndexConverter = new BoardIndexConverter();
@@ -126,11 +125,6 @@ public class Minesweeper implements GameRunnable, GameInitializable {
 
 	private void changeGameStatusToWin() {
 		gameStatus = 1;
-	}
-
-	@Override
-	public void initialize () {
-		gameBoard.initializeGame();
 	}
 
 }
