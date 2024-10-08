@@ -25,16 +25,17 @@ Test 에 대해서 고민을 자주 하였고, 테스트 강의를 들어볼까 
 - <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/readable-code/docs/Sec2%20-%20%EC%B6%94%EC%83%81.md">Section2</a>: 추상
 - <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/readable-code/docs/Sec3%20-%20%EB%85%BC%EB%A6%AC%2C%EC%82%AC%EA%B3%A0%EC%9D%98%20%ED%9D%90%EB%A6%84.md">Section3</a>: 논리,사고의 흐름
 - Seciotn4: <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/readable-code/docs/Sec4%20-%20%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%ED%8C%A8%EB%9F%AC%EB%8B%A4%EC%9E%84.md">객체지향 패러다임</a> + <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/readable-code/docs/Sec4%20-%20SOLID.md">SOLID 원칙</a>
-- <a href="">Section5</a>: 객체 지향 적용하기
+- <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/readable-code/docs/Sec5%20-%20%EA%B0%9D%EC%B2%B4%20%EC%A7%80%ED%96%A5%20%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0.md">Section5</a>: 객체 지향 적용하기
 - <a href="">Section6</a>: 코드 다듬기
-- <a href="">Section7</a>: 리팩토링 연습
+- <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/readable-code/docs/Sec7%20-%20%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81%20%EC%97%B0%EC%8A%B5.md">Section7</a>: 리팩토링 연습
 - <a href="">Section8</a>: 기억하면 좋은 조언들
 
 <br>
 
 ### 미션
-- <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/readable-code/docs/%EB%AF%B8%EC%85%98/Day2%20%EB%AF%B8%EC%85%98.md"> Mission2 : 추상과 구체</a>
-- <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/readable-code/docs/%EB%AF%B8%EC%85%98/Day4%20%EB%AF%B8%EC%85%98.md"> Mission4 : 리팩토링 + SOLID </a>
+- <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/readable-code/docs/%EB%AF%B8%EC%85%98/Day2%20%EB%AF%B8%EC%85%98.md"> Mission1</a> : 추상과 구체
+- <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/readable-code/docs/%EB%AF%B8%EC%85%98/Day4%20%EB%AF%B8%EC%85%98.md"> Mission2</a> : 리팩토링 + SOLID 
+- <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/readable-code/docs/%EB%AF%B8%EC%85%98/Day7%20%EB%AF%B8%EC%85%98.md"> Mission3</a> : 리팩토링
 
 <br><br>
 
