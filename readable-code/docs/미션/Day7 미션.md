@@ -143,3 +143,51 @@ public class StudyCafeIOHandler {
 
 중간에 브릿지 객체를 두어, 실 사용이 필요할 때 Input, Output 객체 2개를 사용하는게 아닌, Bridge 객체를 사용한다 <br>
 
+### 일급 컬렉션
+한 객체에 대해 전용으로 사용하는 객체(=자료구조) 를 의미함. 
+
+[일급 컬렉션 대상 객체]
+```java
+public class StudyCafePass {
+
+    private final StudyCafePassType passType;
+    private final int duration;
+    private final int price;
+    private final double discountRate;
+
+    private StudyCafePass(StudyCafePassType passType, int duration, int price, double discountRate) {
+        this.passType = passType;
+        this.duration = duration;
+        this.price = price;
+        this.discountRate = discountRate;
+    }
+
+    public static StudyCafePass of(StudyCafePassType passType, int duration, int price, double discountRate) {
+        return new StudyCafePass(passType, duration, price, discountRate);
+    }
+
+}
+```
+
+[일급 컬렉션]
+```java
+public class StudyCafePasses {
+	private final List<StudyCafePass> passes;
+
+	public StudyCafePasses (List<StudyCafePass> passes) {
+		this.passes = passes;
+	}
+
+	public static StudyCafePasses of (List<StudyCafePass> passes) {
+		return new StudyCafePasses(passes);
+	}
+
+	public List<StudyCafePass> findPassBy (StudyCafePassType studyCafePassType) {
+		return passes.stream()
+			.filter(studyCafePass -> studyCafePass.isSamePassType(studyCafePassType))
+			.toList();
+	}
+
+}
+
+```
