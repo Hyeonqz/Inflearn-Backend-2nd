@@ -1,0 +1,97 @@
+# Day7 미션
+> 미션 내용	"[섹션 7. 리팩토링 연습]의 ""연습 프로젝트 소개"" 강의를 보고, <br>
+'스터디 카페 이용권 선택 시스템' 프로젝트에서 지금까지 배운 내용을 기반으로 리팩토링을 진행해 봅시다.
+
+## 리팩토링 포인트
+- 추상화 레벨
+- 객체로 묶어볼만한 것은 없는지
+- 객체지향 패러다임에 맞게 객체들이 상호 협력하고 있는지
+- SRP : 책임에 따라 응집도 있게 객체가 잘 나뉘어져 있는지
+- DIP : 의존 관계 역전을 적용할 만한 곳은 없는지
+- 일급 컬렉션
+
+1) 리팩토링 한 단계마다, 그 이유를 설명할 수 있어야 한다.
+2) 
+
+위 포인트를 리마인드 시키면서 리팩토링을 진행해보자 <br>
+
+고민 끝에 Sec7 강의를 참고해 가며 리팩토링을 진행하였습니다 <br>
+
+### 중복 제거 & 메소드 추출
+```java
+public class StudyCafePassMachine {
+
+	private final InputHandler inputHandler = new InputHandler();
+	private final OutputHandler outputHandler = new OutputHandler();
+	// 공통 객체 필드로 변경 후 사용
+	private final StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
+
+	public void run () {
+		try {
+			outputHandler.showWelcomeMessage();
+			outputHandler.showAnnouncement();
+
+			StudyCafePass selectedPass = getSelectedPass();
+			Optional<StudyCafeLockerPass> optionalLockerPass = selectLockerPass(selectedPass);
+
+			optionalLockerPass.ifPresentOrElse(
+				lockerPass -> outputHandler.showPassOrderSummary(selectedPass, lockerPass),
+				() -> outputHandler.showPassOrderSummary(selectedPass)
+			);
+		} catch (AppException e) {
+			outputHandler.showSimpleMessage(e.getMessage());
+		} catch (Exception e) {
+			outputHandler.showSimpleMessage("알 수 없는 오류가 발생했습니다.");
+		}
+	}
+
+	private StudyCafePass getSelectedPass () {
+		outputHandler.askPassTypeSelection();
+		StudyCafePassType studyCafePassType = inputHandler.getPassTypeSelectingUserAction();
+
+		List<StudyCafePass> cafePassList = findPassCandidatesBy(studyCafePassType);
+
+		outputHandler.showPassListForSelection(cafePassList);
+		return inputHandler.getSelectPass(cafePassList);
+	}
+
+	private List<StudyCafePass> findPassCandidatesBy (StudyCafePassType studyCafePassType) {
+		List<StudyCafePass> studyCafePasses = studyCafeFileHandler.readStudyCafePasses();
+		List<StudyCafePass> cafePassList = studyCafePasses.stream()
+			.filter(studyCafePass -> studyCafePass.getPassType() == studyCafePassType)
+			.toList();
+		return cafePassList;
+	}
+
+	private Optional<StudyCafeLockerPass> selectLockerPass (StudyCafePass selectedPass) {
+		if (selectedPass.getPassType() != StudyCafePassType.FIXED) {
+			return Optional.empty();
+		}
+
+		StudyCafeLockerPass lockerPassCandidate = findLockerPassCandidateBy(selectedPass);
+
+		if (lockerPassCandidate != null) {
+			outputHandler.askLockerPass(lockerPassCandidate);
+			boolean lockerSelection = inputHandler.getLockerSelection();
+
+			if (lockerSelection) {
+				return Optional.of(lockerPassCandidate);
+			}
+		}
+		return Optional.empty();
+	}
+
+	private StudyCafeLockerPass findLockerPassCandidateBy (StudyCafePass pass) {
+		List<StudyCafeLockerPass> allLockerPasses = studyCafeFileHandler.readLockerPasses();
+
+		return  allLockerPasses.stream()
+			.filter(lockerPass ->
+				lockerPass.getPassType() == pass.getPassType()
+					&& lockerPass.getDuration() == pass.getDuration()
+			)
+			.findFirst()
+			.orElse(null);
+	}
+
+}
+```
