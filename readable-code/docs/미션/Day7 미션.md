@@ -11,7 +11,6 @@
 - 일급 컬렉션
 
 1) 리팩토링 한 단계마다, 그 이유를 설명할 수 있어야 한다.
-2) 
 
 위 포인트를 리마인드 시키면서 리팩토링을 진행해보자 <br>
 
@@ -95,3 +94,52 @@ public class StudyCafePassMachine {
 
 }
 ```
+
+### 객체의 책임과 응집도
+[I/O 통합]
+```java
+public class StudyCafeIOHandler {
+
+	private final InputHandler inputHandler = new InputHandler();
+	private final OutputHandler outputHandler = new OutputHandler();
+
+	public void showWelcomeMessage() {
+		outputHandler.showWelcomeMessage();
+	}
+
+	public void showAnnouncement() {
+		outputHandler.showAnnouncement();
+	}
+
+	public void showPassOrderSummary(StudyCafePass studyCafePass, StudyCafeLockerPass studyCafeLockerPass) {
+		outputHandler.showPassOrderSummary(studyCafePass, studyCafeLockerPass);
+	}
+
+	public void showPassOrderSummary(StudyCafePass studyCafePass) {
+		outputHandler.showPassOrderSummary(studyCafePass);
+	}
+
+	public void showSimpleMessage(String message) {
+		outputHandler.showSimpleMessage(message);
+	}
+
+	public StudyCafePassType askPassTypeSelection () {
+		outputHandler.askPassTypeSelection();
+		return inputHandler.getPassTypeSelectingUserAction();
+	}
+
+	public StudyCafePass askPassSelecting (List<StudyCafePass> cafePassList) {
+		outputHandler.showPassListForSelection(cafePassList);
+		return inputHandler.getSelectPass(cafePassList);
+	}
+
+	public boolean askLockerPass (StudyCafeLockerPass lockerPassCandidate) {
+		outputHandler.askLockerPass(lockerPassCandidate);
+		return inputHandler.getLockerSelection();
+	}
+
+}
+```
+
+중간에 브릿지 객체를 두어, 실 사용이 필요할 때 Input, Output 객체 2개를 사용하는게 아닌, Bridge 객체를 사용한다 <br>
+
