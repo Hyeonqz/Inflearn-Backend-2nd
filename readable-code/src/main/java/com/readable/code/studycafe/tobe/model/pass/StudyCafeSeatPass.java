@@ -38,8 +38,8 @@ public class StudyCafeSeatPass implements StudyCafePass {
     }
 
     @Override
-    public StudyCafePassType getPassType() {
-        return passType;
+    public StudyCafePassType getPassType () {
+        return null;
     }
 
     @Override
@@ -50,6 +50,10 @@ public class StudyCafeSeatPass implements StudyCafePass {
     @Override
     public int getPrice() {
         return price;
+    }
+
+    public int getDiscountPrice () {
+		return (int)(this.price * this.discountRate);
     }
 
 }

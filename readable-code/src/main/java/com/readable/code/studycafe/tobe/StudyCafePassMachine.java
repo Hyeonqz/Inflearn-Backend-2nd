@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.readable.code.studycafe.tobe.exception.AppException;
 import com.readable.code.studycafe.tobe.io.StudyCafeFileHandler;
 import com.readable.code.studycafe.tobe.io.StudyCafeIOHandler;
+import com.readable.code.studycafe.tobe.model.order.StudyCafePassOrder;
 import com.readable.code.studycafe.tobe.model.pass.locker.StudyCafeLockerPass;
 import com.readable.code.studycafe.tobe.model.pass.locker.StudyCafeLockerPasses;
 import com.readable.code.studycafe.tobe.model.pass.StudyCafeSeatPass;
@@ -13,7 +14,6 @@ import com.readable.code.studycafe.tobe.model.pass.StudyCafePassType;
 import com.readable.code.studycafe.tobe.model.pass.StudyCafeSeatPasses;
 
 public class StudyCafePassMachine {
-	// 공통 객체 필드로 변경 후 사용
 	private final StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
 	private final StudyCafeIOHandler ioHandler = new StudyCafeIOHandler();
 
@@ -24,11 +24,9 @@ public class StudyCafePassMachine {
 
 			StudyCafeSeatPass selectedPass = getSelectedPass();
 			Optional<StudyCafeLockerPass> optionalLockerPass = selectLockerPass(selectedPass);
+			StudyCafePassOrder passOrder = StudyCafePassOrder.of(selectedPass, optionalLockerPass.orElse(null));
 
-			optionalLockerPass.ifPresentOrElse(
-				lockerPass -> ioHandler.showPassOrderSummary(selectedPass, lockerPass),
-				() -> ioHandler.showPassOrderSummary(selectedPass)
-			);
+			ioHandler.showPassOrderSummary(passOrder);
 		} catch (AppException e) {
 			ioHandler.showSimpleMessage(e.getMessage());
 		} catch (Exception e) {
