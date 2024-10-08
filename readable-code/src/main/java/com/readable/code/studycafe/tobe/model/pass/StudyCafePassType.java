@@ -1,4 +1,4 @@
-package com.readable.code.studycafe.tobe.model;
+package com.readable.code.studycafe.tobe.model.pass;
 
 import java.util.Set;
 

@@ -55,9 +55,9 @@ public class StudyCafePassMachine {
 	}
 
 	private List<StudyCafePass> findPassCandidatesBy (StudyCafePassType studyCafePassType) {
-		List<StudyCafePass> studyCafePasses = studyCafeFileHandler.readStudyCafePasses();
-		List<StudyCafePass> cafePassList = studyCafePasses.stream()
-			.filter(studyCafePass -> studyCafePass.getPassType() == studyCafePassType)
+		List<StudyCafePass> studyCafeSeatPasses = studyCafeFileHandler.readStudyCafePasses();
+		List<StudyCafePass> cafePassList = studyCafeSeatPasses.stream()
+			.filter(studyCafeSeatPass -> studyCafeSeatPass.getPassType() == studyCafePassType)
 			.toList();
 		return cafePassList;
 	}
@@ -111,12 +111,12 @@ public class StudyCafeIOHandler {
 		outputHandler.showAnnouncement();
 	}
 
-	public void showPassOrderSummary(StudyCafePass studyCafePass, StudyCafeLockerPass studyCafeLockerPass) {
-		outputHandler.showPassOrderSummary(studyCafePass, studyCafeLockerPass);
+	public void showPassOrderSummary(StudyCafePass studyCafeSeatPass, StudyCafeLockerPass studyCafeLockerPass) {
+		outputHandler.showPassOrderSummary(studyCafeSeatPass, studyCafeLockerPass);
 	}
 
-	public void showPassOrderSummary(StudyCafePass studyCafePass) {
-		outputHandler.showPassOrderSummary(studyCafePass);
+	public void showPassOrderSummary(StudyCafePass studyCafeSeatPass) {
+		outputHandler.showPassOrderSummary(studyCafeSeatPass);
 	}
 
 	public void showSimpleMessage(String message) {
@@ -184,10 +184,73 @@ public class StudyCafePasses {
 
 	public List<StudyCafePass> findPassBy (StudyCafePassType studyCafePassType) {
 		return passes.stream()
-			.filter(studyCafePass -> studyCafePass.isSamePassType(studyCafePassType))
+			.filter(studyCafeSeatPass -> studyCafeSeatPass.isSamePassType(studyCafePassType))
 			.toList();
 	}
 
 }
 
+```
+
+상속대신 최대한 인터페이스(=조합)을 이용하여 문제를 해결하려고 노력을 하자 <br>
+
+[display 로직 이관 -> 공통 메소드 인터페이스를 통하여 추상화]
+```java
+public interface StudyCafePass {
+	StudyCafePassType getPassType();
+	int getDuration();
+	int getPrice();
+}
+
+public class StudyCafeSeatPass implements StudyCafePass {
+
+	private final StudyCafePassType passType;
+	private final int duration;
+	private final int price;
+	private final double discountRate;
+
+	private StudyCafeSeatPass (StudyCafePassType passType, int duration, int price, double discountRate) {
+		this.passType = passType;
+		this.duration = duration;
+		this.price = price;
+		this.discountRate = discountRate;
+	}
+
+	public static StudyCafeSeatPass of(StudyCafePassType passType, int duration, int price, double discountRate) {
+		return new StudyCafeSeatPass(passType, duration, price, discountRate);
+	}
+
+	public boolean cannotUserLocker () {
+		return this.passType.isNotLockerType();
+	}
+
+	public boolean isSamePassType (StudyCafePassType studyCafePassType) {
+		return this.passType == studyCafePassType;
+	}
+
+	public double getDiscountRate() {
+		return discountRate;
+	}
+
+	public boolean isSameDurationType (StudyCafeLockerPass lockerPass) {
+		return lockerPass.isSamePassType(this.passType)
+			&& lockerPass.isSameDuration(this.duration);
+	}
+
+	@Override
+	public StudyCafePassType getPassType() {
+		return passType;
+	}
+
+	@Override
+	public int getDuration() {
+		return duration;
+	}
+
+	@Override
+	public int getPrice() {
+		return price;
+	}
+
+}
 ```
