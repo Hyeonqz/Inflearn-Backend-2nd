@@ -45,13 +45,18 @@ Test 에 대해서 고민을 자주 하였고, 테스트 강의를 들어볼까 
 <br>
 
 ### 미션
-- 
+- o
 
 
 <br>
 
-### 느낀점
+### 느낀점 & 회고
+- <a href="https://www.inflearn.com/blogs/8404">1주차 회고</a>
+- <a href="https://www.inflearn.com/blogs/8692">2주차 회고</a>
+- <a href="#">3주차 회고</a>
+- <a href="#">4주차 회고</a>
 
+<br>
 
 ### Ref
 > <a href="https://www.inflearn.com/course/readable-code-%EC%9D%BD%EA%B8%B0%EC%A2%8B%EC%9D%80%EC%BD%94%EB%93%9C-%EC%9E%91%EC%84%B1%EC%82%AC%EA%B3%A0%EB%B2%95/dashboard">1. Readable Code: 읽기 좋은 코드를 작성하는 사고법_박우빈</a> <br>
