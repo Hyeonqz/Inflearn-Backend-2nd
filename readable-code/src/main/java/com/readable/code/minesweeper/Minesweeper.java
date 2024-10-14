@@ -5,6 +5,7 @@ import com.readable.code.minesweeper.exception.GameException;
 import com.readable.code.minesweeper.game.BoardIndexConverter;
 import com.readable.code.minesweeper.game.GameBoard;
 import com.readable.code.minesweeper.game.GameRunnable;
+import com.readable.code.minesweeper.game.GameStatus;
 import com.readable.code.minesweeper.gameLevel.GameLevel;
 import com.readable.code.minesweeper.io.InputHandler;
 import com.readable.code.minesweeper.io.OutputHandler;
@@ -17,7 +18,7 @@ public class Minesweeper implements GameRunnable {
 	private final BoardIndexConverter boardIndexConverter = new BoardIndexConverter();
 	private final InputHandler inputHandler;
 	private final OutputHandler outputHandler;
-	private int gameStatus = 0; // 0: 게임 중, 1: 승리, -1: 패배
+	private GameStatus gameStatus; // 0: 게임 중, 1: 승리, -1: 패배
 
 	public Minesweeper(GameLevel gameLevel, InputHandler inputHandler, OutputHandler outputHandler) {
 		gameBoard = new GameBoard(gameLevel);
@@ -29,14 +30,14 @@ public class Minesweeper implements GameRunnable {
 		gameBoard = new GameBoard(gameConfig.getGameLevel());
 		this.inputHandler = gameConfig.getInputHandler();
 		this.outputHandler = gameConfig.getOutputHandler();
+		gameStatus = GameStatus.IN_PROGRESS;
 	}
-
 
 	@Override
 	public void run() {
 		outputHandler.showGameStartComments();
 
-		while (true) {
+		while (gameStatus==GameStatus.IN_PROGRESS) {
 			try {
 				outputHandler.showBoard(gameBoard);
 
@@ -58,6 +59,7 @@ public class Minesweeper implements GameRunnable {
 				outputHandler.showSimpleMessage();
 			}
 		}
+		outputHandler.showBoard(gameBoard);
 	}
 
 	private void actOnCell(CellPosition cellPosition, UserAction userActionInput) {
@@ -82,7 +84,7 @@ public class Minesweeper implements GameRunnable {
 	}
 
 	private void changeGameStatusToLose() {
-		gameStatus = -1;
+		gameStatus = GameStatus.LOSE;
 	}
 
 	private boolean doesUserChooseToOpenCell(UserAction userActionInput) {
@@ -110,11 +112,11 @@ public class Minesweeper implements GameRunnable {
 	}
 
 	private boolean doesUserLoseTheGame() {
-		return gameStatus == -1;
+		return gameStatus == GameStatus.LOSE;
 	}
 
 	private boolean doesUserWinTheGame() {
-		return gameStatus == 1;
+		return gameStatus == GameStatus.WIN;
 	}
 
 	private void checkIfGameIsOver() {
@@ -124,7 +126,7 @@ public class Minesweeper implements GameRunnable {
 	}
 
 	private void changeGameStatusToWin() {
-		gameStatus = 1;
+		gameStatus = GameStatus.WIN;
 	}
 
 }
