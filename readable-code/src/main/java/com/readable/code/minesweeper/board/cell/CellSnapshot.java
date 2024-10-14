@@ -1,4 +1,4 @@
-package com.readable.code.minesweeper.cell;
+package com.readable.code.minesweeper.board.cell;
 
 import java.util.Objects;
 
@@ -16,22 +16,22 @@ public class CellSnapshot {
 	}
 
 	public static CellSnapshot ofEmpty() {
-		return of(com.readable.code.minesweeper.cell.CellSnapshotStatus.EMPTY, 0);
+		return of(com.readable.code.minesweeper.board.cell.CellSnapshotStatus.EMPTY, 0);
 	}
 
 	public static CellSnapshot ofFlag() {
-		return of(com.readable.code.minesweeper.cell.CellSnapshotStatus.FLAG,0);
+		return of(com.readable.code.minesweeper.board.cell.CellSnapshotStatus.FLAG,0);
 	}
 
 	public static CellSnapshot ofLandmine() {
-		return of(com.readable.code.minesweeper.cell.CellSnapshotStatus.LAND_MINE,0);
+		return of(com.readable.code.minesweeper.board.cell.CellSnapshotStatus.LAND_MINE,0);
 	}
 
 	public static CellSnapshot ofNumber(int nearbyLandMineCount) {
-		return of(com.readable.code.minesweeper.cell.CellSnapshotStatus.NUMBER,nearbyLandMineCount);
+		return of(com.readable.code.minesweeper.board.cell.CellSnapshotStatus.NUMBER,nearbyLandMineCount);
 	}
 	public static CellSnapshot ofUnchecked() {
-		return of(com.readable.code.minesweeper.cell.CellSnapshotStatus.UNCHECKED,0);
+		return of(com.readable.code.minesweeper.board.cell.CellSnapshotStatus.UNCHECKED,0);
 	}
 
 	public CellSnapshotStatus getStatus () {

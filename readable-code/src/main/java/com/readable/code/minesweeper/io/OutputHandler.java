@@ -1,6 +1,6 @@
 package com.readable.code.minesweeper.io;
 
-import com.readable.code.minesweeper.game.GameBoard;
+import com.readable.code.minesweeper.board.GameBoard;
 import com.readable.code.minesweeper.exception.GameException;
 
 public interface OutputHandler {

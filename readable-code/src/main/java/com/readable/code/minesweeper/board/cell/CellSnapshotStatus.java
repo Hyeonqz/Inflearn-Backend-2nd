@@ -1,4 +1,4 @@
-package com.readable.code.minesweeper.cell;
+package com.readable.code.minesweeper.board.cell;
 
 public enum CellSnapshotStatus {
 	EMPTY("빈 셀"),

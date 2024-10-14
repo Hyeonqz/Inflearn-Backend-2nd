@@ -3,11 +3,11 @@ package com.readable.code.minesweeper.io;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import com.readable.code.minesweeper.game.GameBoard;
+import com.readable.code.minesweeper.board.GameBoard;
 import com.readable.code.minesweeper.exception.GameException;
-import com.readable.code.minesweeper.cell.CellSnapshot;
+import com.readable.code.minesweeper.board.cell.CellSnapshot;
 import com.readable.code.minesweeper.io.sign.enums.CellSignProvider;
-import com.readable.code.minesweeper.position.CellPosition;
+import com.readable.code.minesweeper.board.position.CellPosition;
 
 public class ConsoleOutputHandler implements OutputHandler{
 

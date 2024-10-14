@@ -1,4 +1,4 @@
-package com.readable.code.minesweeper.cell;
+package com.readable.code.minesweeper.board.cell;
 
 import java.util.Arrays;
 import java.util.List;

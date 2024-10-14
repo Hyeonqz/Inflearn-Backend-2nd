@@ -1,4 +1,4 @@
-package com.readable.code.minesweeper.position;
+package com.readable.code.minesweeper.board.position;
 
 import java.util.List;
 import java.util.Objects;

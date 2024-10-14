@@ -1,4 +1,4 @@
-package com.readable.code.minesweeper.game;
+package com.readable.code.minesweeper.io;
 
 import com.readable.code.minesweeper.exception.GameException;
 

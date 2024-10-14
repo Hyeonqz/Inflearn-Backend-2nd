@@ -2,12 +2,12 @@ package com.readable.code.minesweeper;
 
 import com.readable.code.minesweeper.config.GameConfig;
 import com.readable.code.minesweeper.gameLevel.Advanced;
-import com.readable.code.minesweeper.gameLevel.Beginner;
 import com.readable.code.minesweeper.gameLevel.GameLevel;
 import com.readable.code.minesweeper.io.ConsoleInputHandler;
 import com.readable.code.minesweeper.io.ConsoleOutputHandler;
 import com.readable.code.minesweeper.io.InputHandler;
 import com.readable.code.minesweeper.io.OutputHandler;
+import com.readable.code.minesweeper.io.minesweeper.Minesweeper;
 
 public class GameApplication {
 

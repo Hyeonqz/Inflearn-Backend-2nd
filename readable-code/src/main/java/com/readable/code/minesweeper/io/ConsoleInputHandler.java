@@ -4,8 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import com.readable.code.minesweeper.game.BoardIndexConverter;
-import com.readable.code.minesweeper.position.CellPosition;
+import com.readable.code.minesweeper.board.position.CellPosition;
 import com.readable.code.minesweeper.user.UserAction;
 
 public class ConsoleInputHandler implements InputHandler{

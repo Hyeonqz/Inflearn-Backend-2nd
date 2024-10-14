@@ -1,17 +1,17 @@
-package com.readable.code.minesweeper.game;
+package com.readable.code.minesweeper.board;
 
 import java.util.List;
 
-import com.readable.code.minesweeper.cell.Cell;
-import com.readable.code.minesweeper.cell.CellSnapshot;
-import com.readable.code.minesweeper.cell.Cells;
-import com.readable.code.minesweeper.cell.EmptySell;
-import com.readable.code.minesweeper.cell.LandMineCell;
-import com.readable.code.minesweeper.cell.NumberCell;
+import com.readable.code.minesweeper.board.cell.Cell;
+import com.readable.code.minesweeper.board.cell.CellSnapshot;
+import com.readable.code.minesweeper.board.cell.Cells;
+import com.readable.code.minesweeper.board.cell.EmptySell;
+import com.readable.code.minesweeper.board.cell.LandMineCell;
+import com.readable.code.minesweeper.board.cell.NumberCell;
 import com.readable.code.minesweeper.gameLevel.GameLevel;
-import com.readable.code.minesweeper.position.CellPosition;
-import com.readable.code.minesweeper.position.CellPositions;
-import com.readable.code.minesweeper.position.RelativePosition;
+import com.readable.code.minesweeper.board.position.CellPosition;
+import com.readable.code.minesweeper.board.position.CellPositions;
+import com.readable.code.minesweeper.board.position.RelativePosition;
 
 public class GameBoard {
 	private final Cell[][] board;

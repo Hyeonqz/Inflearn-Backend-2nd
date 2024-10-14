@@ -1,4 +1,4 @@
-package com.readable.code.minesweeper.game;
+package com.readable.code.minesweeper.board;
 
 public enum GameStatus {
 	IN_PROGRESS("진행중"),

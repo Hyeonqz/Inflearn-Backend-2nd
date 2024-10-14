@@ -1,10 +1,10 @@
-package com.readable.code.minesweeper.position;
+package com.readable.code.minesweeper.board.position;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.readable.code.minesweeper.cell.Cell;
+import com.readable.code.minesweeper.board.cell.Cell;
 
 public class CellPositions {
 	// CellPosition 에 대한 1급 컬렉션

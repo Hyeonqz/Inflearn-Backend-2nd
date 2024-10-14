@@ -2,8 +2,8 @@ package com.readable.code.minesweeper.io.sign.enums;
 
 import java.util.Arrays;
 
-import com.readable.code.minesweeper.cell.CellSnapshot;
-import com.readable.code.minesweeper.cell.CellSnapshotStatus;
+import com.readable.code.minesweeper.board.cell.CellSnapshot;
+import com.readable.code.minesweeper.board.cell.CellSnapshotStatus;
 import com.readable.code.minesweeper.io.sign.CellSignProvidable;
 
 public enum CellSignProvider implements CellSignProvidable {

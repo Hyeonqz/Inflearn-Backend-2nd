@@ -1,15 +1,15 @@
-package com.readable.code.minesweeper;
+package com.readable.code.minesweeper.io.minesweeper;
 
+import com.readable.code.game.GameRunnable;
 import com.readable.code.minesweeper.config.GameConfig;
 import com.readable.code.minesweeper.exception.GameException;
-import com.readable.code.minesweeper.game.BoardIndexConverter;
-import com.readable.code.minesweeper.game.GameBoard;
-import com.readable.code.minesweeper.game.GameRunnable;
-import com.readable.code.minesweeper.game.GameStatus;
+import com.readable.code.minesweeper.io.BoardIndexConverter;
+import com.readable.code.minesweeper.board.GameBoard;
+import com.readable.code.minesweeper.board.GameStatus;
 import com.readable.code.minesweeper.gameLevel.GameLevel;
 import com.readable.code.minesweeper.io.InputHandler;
 import com.readable.code.minesweeper.io.OutputHandler;
-import com.readable.code.minesweeper.position.CellPosition;
+import com.readable.code.minesweeper.board.position.CellPosition;
 import com.readable.code.minesweeper.user.UserAction;
 
 public class Minesweeper implements GameRunnable {

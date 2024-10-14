@@ -1,11 +1,13 @@
-package com.readable.code.minesweeper.cell;
+package com.readable.code.minesweeper.board.cell;
 
-public class EmptySell implements Cell {
+public class LandMineCell implements Cell {
 	private final CellState cellState = CellState.initialize();
+
+	private boolean isLaneMine;
 
 	@Override
 	public boolean isLandMine () {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -16,14 +18,13 @@ public class EmptySell implements Cell {
 	@Override
 	public CellSnapshot getSnapshot () {
 		if(cellState.isOpened())
-			return CellSnapshot.ofEmpty();
+			return CellSnapshot.ofLandmine();
 
 		if(cellState.isFlagged())
 			return CellSnapshot.ofFlag();
 
 		return CellSnapshot.ofUnchecked();
 	}
-
 
 	@Override
 	public void flag () {
@@ -44,5 +45,4 @@ public class EmptySell implements Cell {
 	public boolean isOpened () {
 		return cellState.isOpened();
 	}
-
 }

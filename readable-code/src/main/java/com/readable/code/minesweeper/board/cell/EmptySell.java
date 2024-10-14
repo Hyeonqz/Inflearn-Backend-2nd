@@ -1,12 +1,7 @@
-package com.readable.code.minesweeper.cell;
+package com.readable.code.minesweeper.board.cell;
 
-public class NumberCell implements Cell {
-	private final int nearbyLandMineCount;
+public class EmptySell implements Cell {
 	private final CellState cellState = CellState.initialize();
-
-	public NumberCell (int nearbyLandMineCount) {
-		this.nearbyLandMineCount = nearbyLandMineCount;
-	}
 
 	@Override
 	public boolean isLandMine () {
@@ -15,19 +10,20 @@ public class NumberCell implements Cell {
 
 	@Override
 	public boolean hasLandMineCount () {
-		return true;
+		return false;
 	}
 
 	@Override
 	public CellSnapshot getSnapshot () {
 		if(cellState.isOpened())
-			return CellSnapshot.ofNumber(nearbyLandMineCount);
+			return CellSnapshot.ofEmpty();
 
 		if(cellState.isFlagged())
 			return CellSnapshot.ofFlag();
 
 		return CellSnapshot.ofUnchecked();
 	}
+
 
 	@Override
 	public void flag () {
