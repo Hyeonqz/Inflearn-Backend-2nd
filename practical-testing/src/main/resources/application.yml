@@ -2,17 +2,62 @@ server:
   port: 9000
 
 spring:
+  profiles:
+    default: local
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+  datasource:
+    url: jdbc:h2:mem:~/cafeKioskApplication
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+
+--- # local
+spring:
+  config:
+    activate:
+      on-profile: local
+
   jpa:
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true # (boot 2.5~) Hibernate 초기화 이후 data.sql 실행 -> 매번 data insert 가 귀찮으므로 이 기능이 대신 해준다.
+
+  # h2 console 접속 여부
+  h2:
+    console:
+      enabled: true
+
+--- # test
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
 
   datasource:
-    url: jdbc:mysql://localhost:3306/practical-test?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/practical_test?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 1234
+
+  sql:
+    init:
+      mode: never
