@@ -1,4 +1,4 @@
-package com.hkjin.practicaltesting.spring.api.product;
+package com.hkjin.practicaltesting.spring.service.product;
 
 import java.util.List;
 

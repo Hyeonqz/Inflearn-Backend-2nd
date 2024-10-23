@@ -1,5 +1,6 @@
 package com.hkjin.practicaltesting.spring.repository;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
@@ -58,11 +59,52 @@ class ProductRepositoryTest {
 			List.of(ProductSellingType.SELLING, ProductSellingType.STOP_SELLING.HOLD));
 
 		// then
-		Assertions.assertThat(allBySellingTypeIn).hasSize(2)
+		assertThat(allBySellingTypeIn).hasSize(2)
 			.extracting("productNumber","name","sellingType")// 원하는 컬럼만 추출
 			.containsExactlyInAnyOrder(
 				Tuple.tuple("001","아메리카노",ProductSellingType.SELLING),
 				Tuple.tuple("002","크룽지",ProductSellingType.HOLD)
+			);
+	}
+
+	@Test
+	@DisplayName("상품번호 리스트로 상품들을 조회한다.")
+	void findAllByProductNumberIn() {
+	    // given
+		Product product = Product.builder()
+			.productNumber("001")
+			.type(ProductType.HANDMADE)
+			.sellingType(ProductSellingType.SELLING)
+			.price(4000)
+			.name("아메리카노")
+			.build();
+
+		Product product1 = Product.builder()
+			.productNumber("002")
+			.type(ProductType.HANDMADE)
+			.sellingType(ProductSellingType.HOLD)
+			.price(4500)
+			.name("크룽지")
+			.build();
+
+		Product product2 = Product.builder()
+			.productNumber("003")
+			.type(ProductType.HANDMADE)
+			.sellingType(ProductSellingType.STOP_SELLING)
+			.price(5000)
+			.name("카페라떼")
+			.build();
+		productRepository.saveAll(List.of(product,product1,product2));
+
+	    // when
+		List<Product> productNumberIn = productRepository.findAllByProductNumberIn(List.of("001","002"));
+
+		// then
+		assertThat(productNumberIn).hasSize(2)
+			.extracting("productNumber","name","sellingType")
+			.containsExactlyInAnyOrder(
+				tuple("001","아메리카노",ProductSellingType.SELLING),
+				tuple("002","크룽지",ProductSellingType.HOLD)
 			);
 	}
 }

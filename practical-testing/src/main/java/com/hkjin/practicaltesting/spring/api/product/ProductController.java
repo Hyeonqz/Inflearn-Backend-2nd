@@ -1,11 +1,11 @@
-package com.hkjin.practicaltesting.spring.api.controller.product;
+package com.hkjin.practicaltesting.spring.api.product;
 
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hkjin.practicaltesting.spring.api.product.ProductService;
+import com.hkjin.practicaltesting.spring.service.product.ProductService;
 import com.hkjin.practicaltesting.spring.api.product.response.ProductResponse;
 
 import lombok.RequiredArgsConstructor;
