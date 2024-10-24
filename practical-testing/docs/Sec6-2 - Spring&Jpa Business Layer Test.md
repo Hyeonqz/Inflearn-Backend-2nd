@@ -80,14 +80,36 @@ class OrderServiceTest {
 **[Enum 값 그 자체를 비교해주는 메소드이다.]**
 > assertThat(order.getOrderStatus()).isEqualByComparingTo(OrderStatus.INIT);
 
+테스트 간 서로 영향을 주어서는 안된다 <br>
+그러기 위해서 tearDown 기능이 있다 <br>
+```java
+@AfterEach
+void tearDown() {
+  productRepository.deleteAllInBatch();
+}
+```
+
+@AfterEach 는 테스트 1개가 끝난 후 메소드를 실행시켜 객체를 초기화한다거나 데이터를 지운다거나 하는 작업을 수행한다 <br>
+
+반대로 @BeforeEach 는 테스트가 메소드 1개 마다 시작전에 사전작업을 진행 하는 것이다 <br>
+@AfterEach 는 테스트 메소드 1개가 끝날 떄 마다 실행을 한다. <br>
+
+비슷한 어노테이션으로 @AfterAll, @BeforeAll 이 있고 이 어노테이션은 테스트 시작전 1번, 테스트 끝난 후 1번만 딱 실행이 된다 <br>
 
 
+### @DataJpaTest 와 @SpringBootTest 차이
+@DataJpaTest 는 내부 구현에 @Transactional 이 걸려있다 <br>
+즉 테스트에서 @Transactional 이 걸려 있으면 테스트가 끝나면 자동으로 롤백이 된다 <br>
+
+@SpringBootTest 는 @Transactional 이 걸려있지 않아, 테스트 가 끝날 떄 마다 TearDown 메소드를 통해서 데이터를 초기화 해줘야 한다 <br>
+TearDown 메소드를 만들기 귀찮아서 테스트에 @Transactional 을 붙일수 있기는 하다 <br>
+하지만 테스트 클래스에 @Transactional 을 걸었을 때 큰 문제점이 있다. <br>
 
 
-
-
-
-
+### 새로운 요구사항
+- 주문 생성 시 재고 확인 및 개수 차감 후 생성하기
+- 재고는 상품번호를 가진다.
+- 재고와 관련 있는 상품 타입은 병 음료, 베이커리 이다
 
 
 

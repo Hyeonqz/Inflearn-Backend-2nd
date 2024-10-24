@@ -2,6 +2,8 @@ package com.hkjin.practicaltesting.spring.service.order;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -22,13 +24,23 @@ public class OrderService {
 
 	public OrderResponse createOrder (OrderCreateRequest orderCreateRequest, LocalDateTime registeredDateTime) {
 		List<String> productNumbers = orderCreateRequest.getProductNumbers();
-		// Product
-		List<Product> productNumberIn = productRepository.findAllByProductNumberIn(productNumbers);
 
-		// Order
-		Order saved = orderRepository.save(Order.create(productNumberIn, registeredDateTime));
+		List<Product> duplicateProducts = findProductsBy(productNumbers);
+
+		Order saved = orderRepository.save(Order.create(duplicateProducts, registeredDateTime));
 
 		return OrderResponse.of(saved);
+	}
+
+	private List<Product> findProductsBy (List<String> productNumbers) {
+		List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
+
+		Map<String, Product> productMap = products.stream()
+			.collect(Collectors.toMap(Product::getProductNumber, p -> p));
+
+		return productNumbers.stream()
+			.map(productMap::get)
+			.toList();
 	}
 
 }
