@@ -6,32 +6,30 @@ import static org.assertj.core.api.Assertions.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hkjin.practicaltesting.spring.api.order.request.OrderCreateRequest;
 import com.hkjin.practicaltesting.spring.api.order.response.OrderResponse;
-import com.hkjin.practicaltesting.spring.domian.order.Order;
 import com.hkjin.practicaltesting.spring.domian.order.OrderRepository;
 import com.hkjin.practicaltesting.spring.domian.orderproduct.OrderProductRepository;
 import com.hkjin.practicaltesting.spring.domian.product.Product;
 import com.hkjin.practicaltesting.spring.domian.product.ProductSellingType;
 import com.hkjin.practicaltesting.spring.domian.product.ProductType;
-import com.hkjin.practicaltesting.spring.repository.ProductRepository;
+import com.hkjin.practicaltesting.spring.domian.stock.Stock;
+import com.hkjin.practicaltesting.spring.domian.product.ProductRepository;
+import com.hkjin.practicaltesting.spring.domian.stock.StockRepository;
 
 @ActiveProfiles("test")
 @SpringBootTest
-class OrderServiceTest {
+class  OrderServiceTest {
 
 	@Autowired
 	private OrderService orderService;
@@ -45,8 +43,12 @@ class OrderServiceTest {
 	@Autowired
 	private OrderProductRepository orderProductRepository;
 
+	@Autowired
+	private StockRepository stockRepository;
+
 	@BeforeEach
 	void setUp() {
+		// bean 이 instance 주입을 해주기 때문에 초기화할 필요가 없다.
 	}
 
 	@AfterEach
@@ -54,6 +56,7 @@ class OrderServiceTest {
 		orderProductRepository.deleteAllInBatch();
 		productRepository.deleteAllInBatch();
 		orderRepository.deleteAllInBatch();
+		stockRepository.deleteAllInBatch();
 	}
 
 	@Test
@@ -116,6 +119,78 @@ class OrderServiceTest {
 				tuple("001", 1000),
 				tuple("001", 1000)
 			);
+	}
+
+	@Test
+	@DisplayName("재고와 관련된 상품이 포함되어 있는 주문번호 리스트를 받아 주문을 생성한다.")
+	void createOrderWithStock() {
+		LocalDateTime now = LocalDateTime.now();
+	    // given
+		Product product1 = createProduct(BOTTLE, "001", 1000);
+		Product product2 = createProduct(BAKERY, "002", 2000);
+		Product product3 = createProduct(HANDMADE, "003", 3000);
+		productRepository.saveAll(List.of(product1,product2,product3));
+
+		Stock stock = Stock.create("001", 2);
+		Stock stock2 = Stock.create("002", 2);
+		stockRepository.saveAll(List.of(stock,stock2));
+
+		OrderCreateRequest request = OrderCreateRequest.builder()
+			.productNumbers(List.of("001", "001","002","003"))
+			.build();
+
+		// when
+		OrderResponse orderResponse = orderService.createOrder(request, now);
+
+	    // then
+		assertThat(orderResponse.getId()).isNotNull();
+		assertThat(orderResponse)
+			.extracting("registeredDateTime", "totalPrice")
+			.contains(now, 7000);
+
+		assertThat(orderResponse.getProducts()).hasSize(4)
+			.extracting("productNumber","price")
+			.containsExactlyInAnyOrder(
+				Tuple.tuple("001",1000),
+				Tuple.tuple("001",1000),
+				Tuple.tuple("002",2000),
+				Tuple.tuple("003",3000)
+			);
+
+		List<Stock> stocks = stockRepository.findAll();
+
+		assertThat(stocks).hasSize(2)
+			.extracting("productNumber","quantity")
+			.containsExactlyInAnyOrder(
+				Tuple.tuple("001",0),
+				Tuple.tuple("002",1)
+			);
+	}
+
+	@Test
+	@DisplayName("재고와 부족한 상품으로주문을 생성하려는 경우 예외가 발생한다")
+	void createOrderWithNoStock() {
+		LocalDateTime now = LocalDateTime.now();
+		// given
+		Product product1 = createProduct(BOTTLE, "001", 1000);
+		Product product2 = createProduct(BAKERY, "002", 2000);
+		Product product3 = createProduct(HANDMADE, "003", 3000);
+		productRepository.saveAll(List.of(product1,product2,product3));
+
+		Stock stock = Stock.create("001", 2);
+		Stock stock2 = Stock.create("002", 2);
+		stock.deductQuantity(1); // TODO
+		stockRepository.saveAll(List.of(stock,stock2));
+
+		OrderCreateRequest request = OrderCreateRequest.builder()
+			.productNumbers(List.of("001", "001","002","003"))
+			.build();
+
+		// when / then
+		assertThatThrownBy(() -> orderService.createOrder(request, now))
+			.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("재고가 부족한 상품이 있습니다");
+
 	}
 
 	private Product createProduct (ProductType type, String productNumber, int price) {

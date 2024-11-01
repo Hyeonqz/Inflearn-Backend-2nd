@@ -1,20 +1,18 @@
 package com.hkjin.practicaltesting.spring.repository;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.hkjin.practicaltesting.spring.domian.product.Product;
+import com.hkjin.practicaltesting.spring.domian.product.ProductRepository;
 import com.hkjin.practicaltesting.spring.domian.product.ProductSellingType;
 import com.hkjin.practicaltesting.spring.domian.product.ProductType;
 

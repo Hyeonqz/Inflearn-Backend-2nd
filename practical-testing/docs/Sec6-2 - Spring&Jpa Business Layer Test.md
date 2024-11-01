@@ -105,6 +105,37 @@ void tearDown() {
 TearDown 메소드를 만들기 귀찮아서 테스트에 @Transactional 을 붙일수 있기는 하다 <br>
 하지만 테스트 클래스에 @Transactional 을 걸었을 때 큰 문제점이 있다. <br>
 
+@Transactional 어노테이션을 사용하면 @AfterEach 같은 코드를 고민할 필요가 없다 <br> 
+삭제 후처리에 대한 고민하지 않아도 되므로 간편하다 <br>
+
+보통 ServiceTest 에서 @Transactional 을 걸어서 롤백을 하거나, 수동 삭제를 통해 객체를 비워버릴 수 있다.
+```java
+
+@Transactional
+@SpringBootTest
+class  OrderServiceTest {
+	
+}
+
+@SpringBootTest
+class OrderServiceTestEx {
+	
+  @AfterEach
+  void tearDown() {
+    orderProductRepository.deleteAllInBatch();
+    productRepository.deleteAllInBatch();
+    orderRepository.deleteAllInBatch();
+    stockRepository.deleteAllInBatch();
+  }
+}
+
+```
+
+위 코드중 둘 중 하나를 사용하면 된다 <br>
+
+그리고 @Transactional 이 프로덕션 코드쪽 JpaRepository<> 를 상속받는 레포지토리가 있다면 상위 계층에 가보면 SimpleJpaRepository 구현체를 보면 <br>
+이미 메소드에 @Transactional 어노테이션이 걸려있다. 그래서 자동으로 롤백이 되긴한다 <br>
+
 
 ### 새로운 요구사항
 - 주문 생성 시 재고 확인 및 개수 차감 후 생성하기
@@ -112,38 +143,7 @@ TearDown 메소드를 만들기 귀찮아서 테스트에 @Transactional 을 붙
 - 재고와 관련 있는 상품 타입은 병 음료, 베이커리 이다
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+### 키워드
+추후 재고 관리 프로그램 같은 경우는 '동시성' 에 대한 문제를 생각해볼 수 있다 <br>
+보통 위 문제를 해결하기 위해 낙관적 락, 비관적 락 개념을 사용하여 데이터에 대한 락을 잡고 순차적으로 처리하게 끔 한다 <br>
+나중에 공부를 좀 더 해보자

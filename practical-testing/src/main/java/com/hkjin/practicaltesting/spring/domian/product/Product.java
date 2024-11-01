@@ -1,5 +1,7 @@
 package com.hkjin.practicaltesting.spring.domian.product;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

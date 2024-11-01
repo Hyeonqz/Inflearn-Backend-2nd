@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.hkjin.practicaltesting.spring.api.product.response.ProductResponse;
 import com.hkjin.practicaltesting.spring.domian.product.Product;
 import com.hkjin.practicaltesting.spring.domian.product.ProductSellingType;
-import com.hkjin.practicaltesting.spring.repository.ProductRepository;
+import com.hkjin.practicaltesting.spring.domian.product.ProductRepository;
 
 import lombok.RequiredArgsConstructor;
 
