@@ -1,8 +1,6 @@
 # Day15 미션
 > Layer Architecture 구조의 레이어별 특징 및 어떻게 테스트를 하면 좋을지에 관한 생각을 적어보자
 
-https://sungbin.kr/%EC%9D%B8%ED%94%84%EB%9F%B0-%EC%9B%8C%EB%B0%8D%EC%97%85-%EC%8A%A4%ED%84%B0%EB%94%94-%ED%81%B4%EB%9F%BD-2%EA%B8%B0-%EB%B0%B1%EC%97%94%EB%93%9C(%ED%81%B4%EB%A6%B0%EC%BD%94%EB%93%9C-%ED%85%8C%EC%8A%A4%ED%8A%B8%EC%BD%94%EB%93%9C)-Day15-%EB%AF%B8%EC%85%98/
-
 ### Persistence Layer
 SpringBoot&JPA 를 사용한다는 가정하에서 Persistence Layer 는 JpaRepository 를 상속받는 엔티티에 영향을 주는 것들을 테스트 하는 계층이라고 생각한다 <br>
 
