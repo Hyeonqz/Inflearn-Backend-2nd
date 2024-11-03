@@ -40,12 +40,21 @@ Test 에 대해서 고민을 자주 하였고, 테스트 강의를 들어볼까 
 <br><br>
 
 ## Practical Testing: 실용적인 테스트 가이드
-- <a></a>:
+- <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/practical-testing/docs/Sec1%2C2%20%EA%B8%B0%EC%B4%88%20%EC%84%B8%ED%8C%85.md">Section1,2</a>: 기초 세팅
+- <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/practical-testing/docs/Sec3%20-%20%EB%8B%A8%EC%9C%84%20%ED%85%8C%EC%8A%A4%ED%8A%B8.md">Section3</a> : 단위 테스트 개념
+- <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/practical-testing/docs/Sec4%20-%20Tdd.md">Section4</a> : Tdd 개념
+- <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/practical-testing/docs/Sec5%20-%20%ED%85%8C%EC%8A%A4%ED%8A%B8%EB%8A%94%20%5B%20%5D%20%EB%8B%A4.md">Section5</a> : 테스트는 -> [] 이다 
+- Section6 : Spring 3 Layer Architecture 단위 테스트
+  - <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/practical-testing/docs/Sec6%20-%20Spring%26Jpa%20%EA%B8%B0%EB%B0%98%20%ED%85%8C%EC%8A%A4%ED%8A%B8.md">Persistence Layer Unit Test</a>
+  - <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/practical-testing/docs/Sec6-2%20-%20Spring%26Jpa%20Business%20Layer%20Test.md">Service Layer Unit Test</a>
+  - <a>Presentation Layer Unit Test</a>
 
 <br>
 
 ### 미션
-- o
+- <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/practical-testing/docs/%EB%AF%B8%EC%85%98/Day12%20%EB%AF%B8%EC%85%98.md">Mission4</a> : 단위테스트 작성
+- <a href="">Mission5</a> : 
+- <a href="">Mission6</a> : 
 
 
 <br>
