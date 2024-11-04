@@ -1,14 +1,10 @@
 package com.hkjin.practicaltesting.spring.api.order.response;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.hkjin.practicaltesting.spring.api.product.response.ProductResponse;
+import com.hkjin.practicaltesting.spring.api.product.dtos.response.ProductResponse;
 import com.hkjin.practicaltesting.spring.domian.order.Order;
-import com.hkjin.practicaltesting.spring.domian.order.OrderStatus;
-import com.hkjin.practicaltesting.spring.domian.orderproduct.OrderProduct;
-import com.hkjin.practicaltesting.spring.domian.product.Product;
 
 import lombok.Builder;
 import lombok.Getter;

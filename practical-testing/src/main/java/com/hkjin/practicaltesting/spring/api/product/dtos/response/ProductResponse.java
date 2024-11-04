@@ -1,4 +1,4 @@
-package com.hkjin.practicaltesting.spring.api.product.response;
+package com.hkjin.practicaltesting.spring.api.product.dtos.response;
 
 import com.hkjin.practicaltesting.spring.domian.product.Product;
 import com.hkjin.practicaltesting.spring.domian.product.ProductSellingType;

@@ -105,4 +105,44 @@ class ProductRepositoryTest {
 				tuple("002","크룽지",ProductSellingType.HOLD)
 			);
 	}
+
+	@Test
+	@DisplayName("가장 마지막으로 저장한 상품의 상품번호를 가져온다")
+	void findLastestProductNumber() {
+	    // given
+		String targetNumber = "003";
+		Product product = createProduct("001",ProductType.HANDMADE,ProductSellingType.SELLING,4000,"아메리카노");
+		Product product1 = createProduct("002",ProductType.HANDMADE,ProductSellingType.HOLD,5000,"카페라떼");
+		Product product2 = createProduct(targetNumber,ProductType.HANDMADE,ProductSellingType.STOP_SELLING,6000,"오곡라떼");
+		productRepository.saveAll(List.of(product,product1,product2));
+
+		// when
+		String lastestProductNumber = productRepository.findLastestProductNumber();
+
+		// then
+		assertThat(lastestProductNumber).isEqualTo(targetNumber);
+	}
+
+	@Test
+	@DisplayName("가장 마지막으로 저장한 상품의 상품번호를 읽어올 때, 상품이 하나도 없는 경우 null 반환")
+	void findLastestProductNumberNull() {
+	    // given
+
+	    // when
+		String lastestProductNumber = productRepository.findLastestProductNumber();
+
+		// then
+		assertThat(lastestProductNumber).isNull();
+	}
+
+	private Product createProduct(String productNumber, ProductType type, ProductSellingType sellingType, int price, String name) {
+		return Product.builder()
+			.productNumber(productNumber)
+			.type(type)
+			.sellingType(sellingType)
+			.price(price)
+			.name(name)
+			.build();
+	}
+
 }
