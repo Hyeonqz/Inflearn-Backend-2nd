@@ -47,29 +47,6 @@ class ProductServiceTest {
 			.sellingType(SELLING)
 			.name("카페라떼")package com.hkjin.practicaltesting.spring.service.product;
 
-import static com.hkjin.practicaltesting.spring.domian.product.ProductSellingType.*;
-import static com.hkjin.practicaltesting.spring.domian.product.ProductType.*;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.List;
-
-import org.assertj.core.api.Assertions;
-import org.assertj.core.groups.Tuple;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.hkjin.practicaltesting.spring.api.product.dtos.request.ProductCreateRequest;
-import com.hkjin.practicaltesting.spring.api.product.dtos.response.ProductResponse;
-import com.hkjin.practicaltesting.spring.domian.product.Product;
-import com.hkjin.practicaltesting.spring.domian.product.ProductRepository;
-import com.hkjin.practicaltesting.spring.domian.product.ProductSellingType;
-import com.hkjin.practicaltesting.spring.domian.product.ProductType;
-
       @ActiveProfiles("test")
       @SpringBootTest
       class ProductServiceTest {
@@ -209,3 +186,152 @@ Master 는 Production 환경에서 계속 살아 있어야 하기 때문에 상�
 Slave 는 Master DB 에 CUD 작업을 바로바로 동기화 시키고 그에 대한 내용을 Select 작업만 할 수 있게 한다 <br>
 
 보통 서비스 최상단에 @Transactional(readOnly=true) 를 걸고, CUD 작업이 있는 메소드에 @Transactional 을 건다 <br>
+
+## Mock 을 사용한 Controller 테스트
+[1번 방법]
+```java
+@AutoConfigureMockMvc
+@SpringBootTest
+```
+
+[2번 방법]
+```java
+@WebMvcTest(controllers = xxxController.class) // 사용할 컨트롤러
+```
+
+프론트랑 백엔드가 나누어져있을 때 응답 이 규격화된 골격이 있으면 서로 편하다 <br>
+```java
+public class ApiResponse<T> {
+
+	private HttpStatus status;
+	private int code;
+	private String message;
+	private T data;
+
+	public ApiResponse (HttpStatus status, String message, T data) {
+		this.code = status.value();
+		this.status = status;
+		this.message = message;
+		this.data = data;
+	}
+
+	public static <T> ApiResponse <T> of (HttpStatus status, T data) {
+		return new ApiResponse<>(status,status.name(), data);
+	}
+
+	public static <T> ApiResponse <T> ok (T data) {
+		return new ApiResponse<>(HttpStatus.OK, HttpStatus.OK.name(), data);
+	}
+
+}
+
+```
+
+#### [@Valid 어노테이션 검증 테스트]
+컨트롤러에서 단위테스트에 가까운 프론트에서 요청한 값이 Valid 한지 알아보는 테스트를 해보려고 한다 <br>
+```java
+@Builder
+public record ProductCreateRequest(
+        String productNumber,
+
+        @NotNull(message = "상품 타입은 필수입니다.") // client 에 보낼 메시지를 적어준다.
+        ProductType type,
+
+        @NotNull(message = "상품 판매상태는 필수입니다.") // enum 같은 객체 또는 type 일 경우
+        ProductSellingType sellingType,
+
+        @NotBlank(message = "상품 이름은 필수입니다.") // String 일 경우
+        String name,
+
+        @Positive(message = "상품 가격은 양수여야 합니다.") // 숫자 일 경우
+        int price
+) {
+
+}
+```
+```java
+@WebMvcTest(controllers = ProductController.class) // Controller 관련 Bean 들만 컨텍스트를 띄우는 것
+class ProductControllerTest {
+
+	@Autowired
+	private MockMvc mockMvc;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+	/*
+	 * mockito 라이브러리의 어노테이션
+	 * 컨테이너에 Mockito 로 만든 Bean 을 넣어주는 역할을 한다.
+	 * */
+	@MockBean
+	private ProductService productService;
+
+	@Test
+	@DisplayName("신규 상품 등록시 상품 타입은 필수값이다.")
+	void createProductWithoutType () throws Exception {
+		// given
+		ProductCreateRequest request = ProductCreateRequest.builder()
+			.sellingType(ProductSellingType.SELLING)
+			.name("아메리카노")
+			.price(4000)
+			.build();
+
+		// when & then
+		// http body 에 값을 넣다보면 직렬화, 역직렬화 과정을 거치게 된다.
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products/new") // perform -> api 수행
+				.content(objectMapper.writeValueAsString(request))
+				.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(MockMvcResultHandlers.print()) // 요청 log 출력
+			.andExpect(MockMvcResultMatchers.status().isBadRequest())
+			.andExpect(MockMvcResultMatchers.jsonPath("$.code").value("400"))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.status").value("BAD_REQUEST"))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.message").value("상품 타입은 필수입니다."))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty())
+		;
+	}
+
+}
+```
+위 Spring Validation 어노테이션을 검증하는 테스트 코드를 위처럼 작성할 수 있다 <br>
+
+#### 추가적인 검증
+String 을 검증 할 때 Spring Validation 에서 3가지 어노테이션이 헷갈린다.
+> @NotBlank -> 아래 값들 모두가 통과하지 못한다, 
+> > @NotNull -> "" " " 이런 것들은 통과 , @NotEmpty -> "     " 은 통과한다.
+
+@Validation 에 대한 책임 분리 ? <br>
+ex) 상품이름은 최대 글자 수는 20자 제한이 있다? <br>
+@Max(20) 으로 제한을 하는 방법도 있다.
+
+
+#### [파라미터가 없을 때 컨트롤러 단위 테스트]
+```java
+	@Test
+	@DisplayName("판매 상품을 조회한다")
+	void getSellingProducts() throws Exception {
+		// given
+		List<ProductResponse> result = List.of();
+		Mockito.when(productService.getSellingProducts()).thenReturn(result);
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/selling")
+		)
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.jsonPath("$.code").value("200"))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.status").value("OK"))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.message").value("OK"))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.data").isArray())
+		;
+
+	}
+```
+
+Get 요청에서는 ObjectMapper 를 주입받을 필요가 없다 <br> 
+직렬화 & 역직렬화가 안 일어나기 때문이다 <br>
+
+
+
+
+
+
