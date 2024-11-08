@@ -330,8 +330,4 @@ ex) 상품이름은 최대 글자 수는 20자 제한이 있다? <br>
 Get 요청에서는 ObjectMapper 를 주입받을 필요가 없다 <br> 
 직렬화 & 역직렬화가 안 일어나기 때문이다 <br>
 
-
-
-
-
-
+@Validation 만 하는 DTO 를 만들고 그 DTO 를 보통 사용하는 Request DTO 로 만드는 방법 또한 좋다 
