@@ -18,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -40,16 +41,20 @@ public class Order extends BaseEntity {
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
 	private List<OrderProduct> orderProducts = new ArrayList<>();
 
-	public Order(List<Product> products, LocalDateTime registeredDateTime) {
-		this.orderStatus = OrderStatus.INIT;
+	@Builder
+	public Order (List<Product> products, OrderStatus orderStatus, LocalDateTime registeredDateTime) {
+		this.orderStatus = orderStatus;
 		this.totalPrice = calculatorTotalPrice(products);
 		this.registeredDateTime = registeredDateTime;
 		this.orderProducts = orderProducts(products);
 	}
 
-
 	public static Order create (List<Product> productNumberIn, LocalDateTime registeredDateTime) {
-		return new Order(productNumberIn, registeredDateTime);
+		return Order.builder()
+			.orderStatus(OrderStatus.INIT)
+			.products(productNumberIn)
+			.registeredDateTime(registeredDateTime)
+			.build();
 	}
 
 	private int calculatorTotalPrice(List<Product> products) {
