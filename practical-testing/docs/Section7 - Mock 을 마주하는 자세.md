@@ -339,12 +339,20 @@ class MailServiceTest {
 
 <br>
 
-## BDDMockito
+## BDDMockito 
+행동주도개발(BDD) + Mockito 조합이다 <br>
 
+```java
+Mockito.when(mailSendClient.sendEmail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(true);
+BDDMockito.given(mailSendClient.sendEmail(Mockito.anyString(),Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .willReturn(true); 
+```
 
+기존에 given 절에 When 구문이 왔다. 이를 이상하게 여겨 오픈소스 개발자가 Mockito 를 상속받는 BDDMockito 객체를 만들고 static 메소드 given 을 만들었다 <br>
+참고로 두 코드의 동작은 똑같다 <br>
 
-
-
+사실상 이름만 바뀌고 동작은 동일하다는 것을 알고 있으면 된다 <br>
 
 ## Classicist VS Mockist
 
