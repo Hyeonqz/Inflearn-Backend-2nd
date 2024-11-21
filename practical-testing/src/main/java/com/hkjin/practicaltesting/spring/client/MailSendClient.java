@@ -13,4 +13,15 @@ public class MailSendClient {
 		throw new IllegalArgumentException("메일 전송");
 	}
 
+	public void hi() {
+		log.info("hi");
+	}
+
+	public void bye() {
+		log.info("bye");
+	}
+
+	public void eat() {
+		log.info("eat");
+	}
 }

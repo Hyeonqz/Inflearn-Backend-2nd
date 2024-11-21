@@ -143,21 +143,214 @@ private MailSendClient mailSendClient;
 메일 작업 처럼 무언가 긴 작업이 있는 메소드면 실제로 트랜잭션에는 참여하지 않아도 된다면 @Transactional 은 지양하자 <br>
 간단한 조회를 할 때는 조회 전용 @Transactional 이 따로 걸리기 때문에 상황을 봐가면서 잘 사용해야 한다 <br>
 
-## TestDouble
+## TestDouble [모킹 용어]
+- 스턴트 맨(Stunt Double)이랑 비슷한? 그런 단어라고 생각하면 이해가 쉽다
+
+https://www.martinfowler.com/bliki/TestDouble.html <br>
+
+- Dummy -> 아무 것도 하지 않는 깡통 객체 (아무런 행위도 하지 않는다)
+- Fake -> 단순한 형태로 동일한 기능은 수행하나, 프로덕션에서 쓰기에는 부족한 객체 
+  - ex) FakeRepository
+- Stub -> 테스트에서 요청한 것에 대해 미리 준비한 결과를 제공하는 객체, 그 외에는 응답하지 않는다.
+- Spy -> stub 이면서 호출된 내용을 기록하여 보여줄 수 있는 개체
+  - 일부는 실제 객체처럼 동작시키고 일부만 Stubbing 할 수 있다. (실제 객체랑 거의 유사하게 동작할 수 있다)
+- Mock -> 행위에 대한 기대를 명세하고, 그에 따라 동작하도록 만들어진 객체
+  
+Stub 과 Mock 은 항상 헷갈리는 존재이다 <br>
+Stub 은 '상태 검증' , Mock 은 '행위 검증' 을 하는편 이다 <br>
 
 
+## 순수 Mockito로 검증해보기
+#### [순수 Mockito 객체를 사용하여 테스트 코드 작성]
+```java
+import static org.junit.jupiter.api.Assertions.*;
 
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 
-## @Mock @Spy @InjectMocks
+import com.hkjin.practicaltesting.spring.client.MailSendClient;
+import com.hkjin.practicaltesting.spring.domian.history.MailSendHistory;
+import com.hkjin.practicaltesting.spring.domian.history.MailSendHistoryRepository;
 
+class MailServiceTest {
 
+	/* @SpringBootTest 는 하지 않고, 진행함*/
+	/* 순수 Mockito 에 대한 테스트를 한다. */
 
+	/* Mock 객체는 아무것도 지정하지 않으면 예외가 발생하지 않고 기본값을 리턴한다. */
+
+	@Test
+	@DisplayName("메일 전송 테스트")
+	void sendMail() {
+	    // given
+
+		// Mock 객체 생성
+		// mock -> withSettings -> defaultAnswer 에 의해 객체 타입에 맞게 자동으로 반환을 해준다.
+		MailSendClient mailSendClient = Mockito.mock(MailSendClient.class);
+		MailSendHistoryRepository mailSendHistoryRepository = Mockito.mock(MailSendHistoryRepository.class);
+
+		MailService mailService = new MailService(mailSendClient, mailSendHistoryRepository);
+
+		// when
+		Mockito.when(mailSendClient.sendEmail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+			.thenReturn(true);
+
+/*		Mockito.when(mailSendHistoryRepository.save(Mockito.any(MailSendHistory.class)))
+			.thenReturn("");*/
+
+		boolean result = mailService.sendMail("","","","");
+
+		// then
+		Assertions.assertThat(result).isTrue();
+
+		/** Mockito 정확한 검증 */
+		// Mockito 가 몇번 호출되었는지 검증한다.
+		Mockito.verify(mailSendHistoryRepository, Mockito.times(1)).save(Mockito.any(MailSendHistory.class));
+	}
+
+}
+```
+#### @Mock 을 사용한 테스트 코드 작성
+```java
+@ExtendWith(MockitoExtension.class) // Mockito 사용해서 Mock 만들거야 인지시키기!
+class MailServiceTest {
+
+	/* @SpringBootTest 는 하지 않고, 진행함*/
+	/* 순수 Mockito 에 대한 테스트를 한다. */
+
+	/* Mock 객체는 아무것도 지정하지 않으면 예외가 발생하지 않고 기본값을 리턴한다. */
+	@Mock
+	private MailSendClient mailSendClient;
+
+	@Mock
+	private MailSendHistoryRepository mailSendHistoryRepository;
+
+	@Test
+	@DisplayName("메일 전송 테스트")
+	void sendMail() {
+	    // given
+
+		// Mock 객체 생성
+		MailService mailService = new MailService(mailSendClient, mailSendHistoryRepository);
+
+		// when
+		Mockito.when(mailSendClient.sendEmail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+			.thenReturn(true);
+
+/*		Mockito.when(mailSendHistoryRepository.save(Mockito.any(MailSendHistory.class)))
+			.thenReturn("");*/
+
+		boolean result = mailService.sendMail("","","","");
+
+		// then
+		Assertions.assertThat(result).isTrue();
+
+		/** Mockito 정확한 검증 */
+		// Mockito 가 몇번 호출되었는지 검증한다.
+		Mockito.verify(mailSendHistoryRepository, Mockito.times(1)).save(Mockito.any(MailSendHistory.class));
+	}
+
+}
+
+```
+
+<br>
+
+#### @Spy
+@Spy 는 행위를 검증할 수 있다. Mockito 의 verify() 와 비슷한 느낌이다 <br>
+한 메소드의 의존한 여러 메소드 중에서 내가 원하는 메소드만 stubbing 할 때 사용한다. <br>
+하위 메소드들이 없어도 잘 동작하게 끔 만들기 위함 <br>
+
+@Spy 는 Mockito.when 절을 사용하지 않는다.
+왜냐하면 @Spy 는 실제 객체를 기반으로 만들어진다. 기존의 Mockito.when 은 모킹한 객체를 사용하기 때문에 테스트가 실패한다 <br>
+
+한 객체에서 일부는 실제 객체의 기능을 사용하고 나머지 일부만 Stubbing 하고 싶을 때 @Spy 를 사용한다 <br>
+사용하는 빈도는 엄청 많지는 않다 <br>
+
+```java
+@ExtendWith(MockitoExtension.class) 
+class MailServiceTest {
+
+	@Spy
+	private MailSendClient mailSendClient;
+
+	@Mock
+	private MailSendHistoryRepository mailSendHistoryRepository;
+
+	@InjectMocks
+	private MailService mailService;
+
+	@Test
+	@DisplayName("메일 전송 테스트")
+	void sendMail() {
+	    // given
+		Mockito.doReturn(true)
+			.when(mailSendClient)
+			.sendEmail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+
+		// when
+		boolean result = mailService.sendMail("","","","");
+
+		// then
+		Assertions.assertThat(result).isTrue();
+
+		Mockito.verify(mailSendHistoryRepository, Mockito.times(1)).save(Mockito.any(MailSendHistory.class));
+	}
+
+}
+```
+
+<br>
+
+#### @InjectMocks
+```java
+@RequiredArgsConstructor
+@Service
+public class MailService {
+	private final MailSendClient mailSendClient;
+	private final MailSendHistoryRepository mailSendHistoryRepository;
+        
+	// 로직
+	
+}
+
+@ExtendWith(MockitoExtension.class)
+class MailServiceTest {
+
+  @Mock
+  private MailSendClient mailSendClient;
+
+  @Mock
+  private MailSendHistoryRepository mailSendHistoryRepository;
+
+  @InjectMocks
+  private MailService mailService;
+```
+
+@InjectMocks 를 통해 MailService 을 생성자를 보고 @Mock 이 선언된 객체들을 Inject 를 한다. <br>
+위 어노테이션을 사용하지 않으면 
+> 	MailService mailService = new MailService(mailSendClient, mailSendHistoryRepository);
+
+위 코드를 직접 작성해야 하는 번거로움이 매번있을 것이다 <br>
+
+<br>
 
 ## BDDMockito
 
 
 
+
+
+
 ## Classicist VS Mockist
+
+
+
+
 
 
 

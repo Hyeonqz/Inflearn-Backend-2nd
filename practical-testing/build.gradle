@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.4'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id "org.asciidoctor.jvm.convert" version "3.3.2" // rest docs
 }
 
 group = 'com.hkjin'
@@ -17,6 +18,7 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	asciidoctorExt // rest docs
 }
 
 repositories {
@@ -24,9 +26,14 @@ repositories {
 }
 
 dependencies {
-	// spring boot
+	// SpringBoot
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// rest docs
+	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
 	// lombok
 	compileOnly 'org.projectlombok:lombok'
@@ -34,7 +41,6 @@ dependencies {
 
 	// database
 	runtimeOnly 'com.h2database:h2'
-	// runtimeOnly 'com.mysql:mysql-connector-j'
 
 	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -43,4 +49,27 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+
+ext { // 전역변수 추가(rest docs)
+	snippetDir = file('build/generated-snippets')
+}
+
+test { // rest docs -> 테스트 결과물 snippetDir 업로드
+	outputs.dir snippetDir
+}
+
+asciidoctor { // rest docs
+	inputs.dir snippetDir
+	configurations 'asciidoctorExt'
+
+	dependsOn test
+}
+
+bootJar { // rest docs
+	dependsOn asciidoctor
+	from("${asciidoctor.outputDir}") {
+		into 'static/docs'
+	}
 }
