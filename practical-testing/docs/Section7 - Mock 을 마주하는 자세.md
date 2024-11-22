@@ -370,3 +370,11 @@ BDDMockito.given(mailSendClient.sendEmail(Mockito.anyString(),Mockito.anyString(
 기능이 보장된 메소드는 Mock 으로 하자는 주의 이다 <br>
 
 ## 키워드 정리
+- Test Double, Stubbing
+  - dummy, fake, stub, spy, mock
+- @Mock, @MockBean, @Spy, @SpyBean, @InjectMocks
+  - 스프링에서 사용할 때는 @MockBean 사용 , InjectMocks 은 필요없다 왜냐? 스프링이 빈을 주입해주닌까
+  - 스프링 없이 테스트 할 때는 @InjectMocks 사용
+- BDDMockito
+  - Mockito 랩핑 클래스 -> 위 객체를 사용하자
+- Classicist VS Mockist
