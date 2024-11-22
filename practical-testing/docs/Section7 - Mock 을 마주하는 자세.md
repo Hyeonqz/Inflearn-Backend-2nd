@@ -355,11 +355,18 @@ BDDMockito.given(mailSendClient.sendEmail(Mockito.anyString(),Mockito.anyString(
 사실상 이름만 바뀌고 동작은 동일하다는 것을 알고 있으면 된다 <br>
 
 ## Classicist VS Mockist
+#### Classicist
+진짜 객체로 다 테스트를 해야한다 주장 <br>
+실제 객체로 테스트를 하고 꼭 필요한 경우에만 Mocking 을 하자 <br>
+
+서비스 테스트는 Mocking 을 하지않고 실제 객체를 사용하여 테스트를 하였다 <br>
+하지만 컨트롤러 테스트는 Service ~ Persistence Layer 를 Mocking 처리하여 테스트를 진행하였다 <br> 
+
+컨트롤러는 외부에서 들어온 Parameter 값을 검증하는 역할로, 하위 들은 Mocking 을 하고 한가지만 집중을 시켰다 <br>
+외부 연동이 있는 시스템에서는 외부 로직은 Mocking 처리하는게 좋고, 내부 로직은 실제 객체로 테스트 하는게 좋다고 생각한다 <br>
 
 
-
-
-
-
+#### Mockist
+기능이 보장된 메소드는 Mock 으로 하자는 주의 이다 <br>
 
 ## 키워드 정리
