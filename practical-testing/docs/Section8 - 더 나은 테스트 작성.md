@@ -126,9 +126,41 @@ deleteAll 은 전체 테이블을 조회하는 select 를 날리고 데이터를
 
 
 ### 7) @ParameterizedTest
+> 단순하게 하나의 테스트 이지만 여러 값을 넣어보면서 테스트해보고 싶을 때 사용하는 테스트를 알아보자 
+
+```java
+	@CsvSource({"HANDMADE, false","BOTTLE,true","BAKERY,true"})
+	@ParameterizedTest
+	void ProductTypeParameterized(ProductType productType, boolean expected) {
+		// when
+		boolean result = ProductType.containsStockType(productType);
+
+		// then
+		Assertions.assertThat(result).isEqualTo(expected);
+	}
+
+	private static Stream<Arguments> ProductTypeParameterized() {
+		return Stream.of(
+			Arguments.of(ProductType.HANDMADE, false),
+			Arguments.of(ProductType.BOTTLE, true),
+			Arguments.of(ProductType.BAKERY, true)
+		);
+	}
 
 
+	@MethodSource("ProductTypeParameterized")
+	@ParameterizedTest
+	void ProductTypeTest(ProductType productType, boolean expected) {
+	    // when
+		boolean result = ProductType.containsStockType(productType);
 
+	    // then
+		Assertions.assertThat(result).isEqualTo(expected);
+	}
+```
+
+위 예시를 보면 이해하기 좋다! <br>
+아니면 공식문서에도 예제가 잘 나와있다 https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests <br>
 
 
 
