@@ -165,13 +165,50 @@ deleteAll 은 전체 테이블을 조회하는 select 를 날리고 데이터를
 
 
 ### 8) @DynamicTest
+> 여러 공유변수를 사용하여 테스트를 사용하는 것을 지향한다. 그때 사용하는 케이스에 사용하는 것이 @DynamicTest
+
+- 환경을 설정해두고 사용한다.
+
+```java
+@DisplayName("재고 차감 시나리오")
+@TestFactory
+Collection<DynamicTest> stockDeductionDynamicTest() {
+  // given
+  Stock stock = Stock.create("001", 1);
+
+  return List.of(
+          DynamicTest.dynamicTest("재고를 주어진 개수만큼 차감할 수 있다.", () -> {
+            // given
+            int quantity = 1;
+
+            // when
+            stock.deductQuantity(quantity);
+
+            // then
+            assertThat(stock.getQuantity()).isZero();
+          }),
+          DynamicTest.dynamicTest("재고보다 많은 수의 수량으로 차감 시도하는 경우 예외가 발생한다.", () -> {
+            // given
+            int quantity = 1;
+
+            // when // then
+            assertThatThrownBy(() -> stock.deductQuantity(quantity))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("차감할 재고 수량이 없습니다.");
+          })
+  );
+}
 
 
-
-
+위와 같이 힌 메소드 안에서 여러개의 단계를 쪼개서 시나리오를 검증하는 코드를 작성해 볼 수 있다 <br>
 
 
 ### 9) 테스트 수행도 비용이다. 환경 통합하기
+
+
+
+
+
 
 
 
