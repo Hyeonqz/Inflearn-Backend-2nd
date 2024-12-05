@@ -199,21 +199,67 @@ Collection<DynamicTest> stockDeductionDynamicTest() {
   );
 }
 
+```
 
 위와 같이 힌 메소드 안에서 여러개의 단계를 쪼개서 시나리오를 검증하는 코드를 작성해 볼 수 있다 <br>
 
 
 ### 9) 테스트 수행도 비용이다. 환경 통합하기
+테스트를 작성하는 이유 중 하나는 사람이 수동으로 검증하는 비용보다, 기계의 도움을 받아 수시로 검증하고 피드백을 받으며 프로덕션 코드를 발전시킬 수 있는 도구이기 떄문이다 <br>
+
+테스트를 자주 수행하기 위해서는 테스트가 시행되는 시간들 또한 비용이기 때문에 관리가 필요하다 <br>
+
+> gradle -> Tasks -> verification-> test 를 클릭하면 모듈내에 모든 테스트를 자동으로 실행시켜준다 <br>
 
 
+동일한 환경에서 테스트를 실행해야지 @SpringBootTest 로 부터 서버가 뜨는 시간을 줄일 수 있다 <br>
+ex) @ActiveProfiles 가 다를 경우 테스트 메소드 마다 스프링 부트 서버가 계속 다시 뜨게 된다 <br>
+
+#### [1번 방법]
+```java
+@ActiveProfiles("test")
+@SpringBootTest
+public abstract class IntegrationTestSupport {
+	
+	@MockBean
+    protected MailSendClient mailSendClient;
+	
+}
+
+class OrderServiceTest extends IntegrationTestSupport {
+	// 테스트 로직
+}
+```
+
+위 추상 클래스를 생성하고 서비스에서 위 클래스를 상속받는 구조로 사용하게끔 한다 <br>
+하지만 위 서비스를 공통으로 묶어도 환경이 조금이라도 달라지면 스프링 서버가 재시동 된다 <br>
+ex) @MockBean, @Mock <br><br>
 
 
+#### [2번 방법]
+Service, Repository 둘다 @SpringBootTest 를 사용하는게 편리하다 <br>
+위 두 layer 는 통합이 쉽지만, Controller 부분은 통합하기가 쉽지 않다 <br>
 
+```java
+@WebMvcTest(controllers = {
+	OrderController.class, ProductController.class
+})
+public abstract class IntegrationControllerSupport {
 
+	@Autowired
+	protected MockMvc mockMvc;
 
+	@Autowired
+	protected ObjectMapper objectMapper;
+	/*
+	 * mockito 라이브러리의 어노테이션
+	 * 컨테이너에 Mockito 로 만든 Bean 을 넣어주는 역할을 한다.
+	 * */
+	@MockBean
+	protected ProductService productService;
+}
 
-
-
+```
 
 ### 10) private 메소드 테스트는 어떻게 할까
 

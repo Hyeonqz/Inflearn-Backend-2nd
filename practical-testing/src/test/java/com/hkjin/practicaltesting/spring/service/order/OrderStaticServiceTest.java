@@ -16,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.hkjin.practicaltesting.PracticalTestingApplication;
+import com.hkjin.practicaltesting.spring.IntegrationTestSupport;
 import com.hkjin.practicaltesting.spring.api.order.OrderStatisticsService;
 import com.hkjin.practicaltesting.spring.client.MailSendClient;
 import com.hkjin.practicaltesting.spring.domian.history.MailSendHistory;
@@ -28,9 +29,8 @@ import com.hkjin.practicaltesting.spring.domian.product.ProductRepository;
 import com.hkjin.practicaltesting.spring.domian.product.ProductSellingType;
 import com.hkjin.practicaltesting.spring.domian.product.ProductType;
 
-@ActiveProfiles("test")
 @SpringBootTest(classes = PracticalTestingApplication.class)
-public class OrderStaticServiceTest {
+public class OrderStaticServiceTest  extends IntegrationTestSupport {
 
 	@Autowired
 	private ProductRepository productRepository;

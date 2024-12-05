@@ -13,9 +13,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.hkjin.practicaltesting.spring.IntegrationTestSupport;
 import com.hkjin.practicaltesting.spring.api.order.request.OrderCreateRequest;
 import com.hkjin.practicaltesting.spring.api.order.response.OrderResponse;
 import com.hkjin.practicaltesting.spring.domian.order.OrderRepository;
@@ -27,9 +26,7 @@ import com.hkjin.practicaltesting.spring.domian.stock.Stock;
 import com.hkjin.practicaltesting.spring.domian.product.ProductRepository;
 import com.hkjin.practicaltesting.spring.domian.stock.StockRepository;
 
-@ActiveProfiles("test")
-@SpringBootTest
-class  OrderServiceTest {
+class OrderServiceTest extends IntegrationTestSupport {
 
 	@Autowired
 	private OrderService orderService;

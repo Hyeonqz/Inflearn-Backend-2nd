@@ -14,25 +14,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hkjin.practicaltesting.spring.IntegrationControllerSupport;
 import com.hkjin.practicaltesting.spring.api.product.dtos.request.ProductCreateRequest;
 import com.hkjin.practicaltesting.spring.api.product.dtos.response.ProductResponse;import com.hkjin.practicaltesting.spring.domian.product.ProductSellingType;
 import com.hkjin.practicaltesting.spring.domian.product.ProductType;
 import com.hkjin.practicaltesting.spring.service.product.ProductService;import com.jayway.jsonpath.JsonPath;
 
-@WebMvcTest(controllers = ProductController.class) // Controller 관련 Bean 들만 컨텍스트를 띄우는 것
-class ProductControllerTest {
-
-	@Autowired
-	private MockMvc mockMvc;
-
-	@Autowired
-	private ObjectMapper objectMapper;
-	/*
-	 * mockito 라이브러리의 어노테이션
-	 * 컨테이너에 Mockito 로 만든 Bean 을 넣어주는 역할을 한다.
-	 * */
-	@MockBean
-	private ProductService productService;
+class ProductControllerTest extends IntegrationControllerSupport {
 
 	@Test
 	@DisplayName("판매 상품을 조회한다")
