@@ -53,8 +53,6 @@ Test 에 대해서 고민을 자주 하였고, 테스트 강의를 들어볼까 
 
 ### 미션
 - <a href="https://github.com/Hyeonqz/Inflearn-Backend-2nd/blob/main/practical-testing/docs/%EB%AF%B8%EC%85%98/Day12%20%EB%AF%B8%EC%85%98.md">Mission4</a> : 단위테스트 작성
-- <a href="">Mission5</a> : 
-- <a href="">Mission6</a> : 
 
 
 <br>
